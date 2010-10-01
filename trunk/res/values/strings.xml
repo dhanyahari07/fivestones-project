@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">Five Stones</string>
+    <string name="cont">Continue</string>
+    <string name="start">New Game</string>
+    <string name="level">Level</string>
+    <string name="high">Highscores</string>
+    <string name="quit">Quit</string>
+    <string name="back">Back</string>
+    <string name="battery">Battery Status</string>
+    <string name="signal">Signal Strength</string>
+    <string name="opt">Options</string>
+    <string name="cell">Zoom Ratio</string>
+    <string name="sens">Sensitivity</string>
+    <string name="style">Select Style</string>
+    <string name="aboutcontent">
+    \tFive Stones v.1.0
+    \n\n
+    Players put their signs in an empty square by turns.
+    The goal is to collect five signs in an unbroken row
+    horizontally, vertically or diagonally.
+    \n\n
+    Developed by:\n\t Tangl Andras, Hungary
+    </string>
+</resources>

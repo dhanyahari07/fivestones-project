@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+main/flipper"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+    <TableLayout android:orientation="vertical"
+                 android:gravity="center"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:padding="20px">
+        <TableRow android:gravity="center">
+            <Button android:id="@+main/continueButton"
+                    android:text="@string/cont"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120px"
+                    android:onClick="onClick"
+                    android:visibility="invisible"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <Button android:id="@+main/startButton"
+                    android:text="@string/start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120px"
+                    android:onClick="onClick"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <Button android:id="@+main/levelButton"
+                    android:text="@string/level"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120px"
+                    android:onClick="onClick"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <Button android:id="@+main/highButton"
+                    android:text="@string/high"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120px"
+                    android:onClick="onClick"/>
+        </TableRow>
+        <TableRow android:gravity="center">
+            <Button android:id="@+main/quitButton"
+                    android:text="@string/quit"
+                    android:layout_height="wrap_content"
+                    android:layout_width="120px"
+                    android:onClick="onClick"/>
+        </TableRow>
+    </TableLayout>
+</ViewFlipper>
