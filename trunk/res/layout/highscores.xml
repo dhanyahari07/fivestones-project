@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="#a0000000"
+              android:gravity="center">
+  <TextView android:id="@+highscore/easy"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"/>
+  <TextView android:id="@+highscore/medium"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"/>
+  <TextView android:id="@+highscore/hard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:paddingBottom="40dp"
+            android:paddingLeft="20dp"/>
+  <TableRow android:gravity="center">
+      <Button android:id="@+highscore/backButton"
+              android:text="@string/back"
+              android:layout_width="150dp"
+              android:layout_height="wrap_content"
+              android:onClick="onClick"/>
+  </TableRow>
+</TableLayout>

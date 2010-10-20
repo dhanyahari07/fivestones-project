@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_height="fill_parent"
+              android:layout_width="fill_parent">
+  <TableRow android:background="#444444">
+      <TextView android:id="@+options/options"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:textColor="#fff"
+                android:text="@string/opt"
+                android:textSize="16dp"
+                android:paddingLeft="10dp"/>
+  </TableRow>
+  <TableRow android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:clickable="true">
+      <TextView android:id="@+options/size"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:textSize="20dp"
+                android:textColor="#fff"
+                android:text="@string/cell"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingRight="40dp"/>
+      <SeekBar android:id="@+options/seekbarcell"
+               android:layout_height="wrap_content"
+               android:layout_width="fill_parent"
+               android:layout_weight="2"
+               style="?android:attr/progressBarStyleHorizontal"
+               android:max="6"
+               android:paddingRight="15dp"/>
+   </TableRow>
+   <TableRow android:background="#555555">
+       <TextView android:layout_width="fill_parent"
+                 android:layout_height="1dp"/>
+   </TableRow>
+   <TableRow android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:clickable="true">
+      <TextView android:id="@+options/sens"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:textSize="20dp"
+                android:textColor="#fff"
+                android:text="@string/sens"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingRight="40dp"/>
+      <SeekBar android:id="@+options/seekbarsens"
+               android:layout_height="wrap_content"
+               android:layout_width="fill_parent"
+               android:layout_weight="2"
+               style="?android:attr/progressBarStyleHorizontal"
+               android:max="4"
+               android:paddingRight="15dp"/>
+   </TableRow>
+   <TableRow android:background="#555555">
+       <TextView android:layout_width="fill_parent"
+                 android:layout_height="1dp"/>
+   </TableRow>
+   <TableRow>
+       <TextView android:id="@+options/text"
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:textSize="20dp"
+                 android:textColor="#fff"
+                 android:text="@string/style"
+                 android:padding="20dp"/>
+   </TableRow>
+   <TableRow android:background="#222222">
+       <TextView android:layout_width="fill_parent"
+                 android:layout_height="1dp"/>
+   </TableRow>
+   <ListView android:id="@+options/list"
+             android:divider="#222222"
+             android:dividerHeight="1dp"
+             android:textColor="#fff"
+             android:background="#000"
+             android:layout_height="wrap_content"
+             android:layout_width="fill_parent"/>
+   <TableRow android:background="#555555">
+        <TextView android:layout_width="fill_parent"
+                  android:layout_height="1dp"/>
+   </TableRow>
+</TableLayout>
