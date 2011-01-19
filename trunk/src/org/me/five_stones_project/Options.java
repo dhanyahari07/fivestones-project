@@ -35,7 +35,7 @@ public class Options extends Activity
         sens.setProgress(sensitivity);
         sens.setOnSeekBarChangeListener(this);
         //set the adapter of the listview
-        ArrayAdapter adapter=new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,
             android.R.layout.simple_list_item_multiple_choice,
             new String[]{"\tHungarian","\tGomoku","\tModern"});
 

@@ -244,19 +244,19 @@ public class MainActivity extends Activity
         //this method is the listener to the alert dialog created when there is an
         //unfinished game and the gamer want to start a new one
         if(retreat_question){
-            if(arg1==arg0.BUTTON_POSITIVE){
+            if(arg1==DialogInterface.BUTTON_POSITIVE){
                 //gameOver(gamertypes.o.ordinal());//if retreat, android win
                 arg0.dismiss();
                 //start a new game
                 newGame(false);
             }
-            else if(arg1==arg0.BUTTON_NEGATIVE){
+            else if(arg1==DialogInterface.BUTTON_NEGATIVE){
                 //if no retreat, dismiss the dialog
                 arg0.dismiss();
             }
             retreat_question=false;
         }
-        else if(arg1==arg0.BUTTON_POSITIVE){
+        else if(arg1==DialogInterface.BUTTON_POSITIVE){
             //this called when the first question after the game started displayed,
             //->"May I start?", if yes, android make the first step
             game.androidFirstStep();

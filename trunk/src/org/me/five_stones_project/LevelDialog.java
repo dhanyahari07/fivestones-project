@@ -20,7 +20,7 @@ public class LevelDialog extends AlertDialog implements OnItemClickListener{
     public LevelDialog(Context context){
         super(context);
 
-        ArrayAdapter adapter=new ArrayAdapter<String>(context,
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(context,
             android.R.layout.select_dialog_singlechoice,options);
 
         ListView view=new ListView(context);

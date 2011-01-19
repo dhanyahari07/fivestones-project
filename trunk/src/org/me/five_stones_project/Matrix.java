@@ -63,7 +63,7 @@ class Matrix{
 
     public ArrayList<Coordinate> searchMatch(int[][] board_part,int[] mint1,int[][] mint2){
         ArrayList<Coordinate> ret=new ArrayList<Coordinate>();
-        outer: for(int _angle=0;_angle<8;++_angle){
+        for(int _angle=0;_angle<8;++_angle){
             int[][] rotated=rotateVector(mint1,_angle);
             for(int i=0;i<board_part.length-rotated.length+1;++i)
                 for(int j=0;j<board_part[0].length-rotated[0].length+1;++j){
@@ -86,7 +86,7 @@ class Matrix{
                                 first.setXY(i,j+4);
                             else
                                 first.setXY(i,j);
-                            //visszatérés
+                            //return
                             return ret;
                         }
                         else{

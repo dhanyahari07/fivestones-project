@@ -27,11 +27,11 @@ class AndroidMenuDialog extends AlertDialog
         super(context);
         main=context;
 
-        String[] options={"\tContinue","\tOptions","\tMenu","\tAbout"};
+        String[] options={"\tContinue","\tOptions","\tBack to Menu","\tAbout"};
         int[] icons={R.drawable.cont,R.drawable.options,R.drawable.back,R.drawable.info};
 
         //create a new alert dialog with the specified chosen options
-        ArrayAdapter adapter=new IconArrayAdapter<String>(context,
+        ArrayAdapter<String> adapter=new IconArrayAdapter<String>(context,
                 R.layout.list_item,R.list_item.icon,
                 R.list_item.label,icons,options);
 

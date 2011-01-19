@@ -4,7 +4,6 @@ import android.view.*;
 import android.content.*;
 import android.graphics.*;
 import android.view.View.*;
-import android.widget.AdapterView.*;
 
 import android.os.Handler;
 import java.util.ArrayList;
@@ -360,12 +359,12 @@ class GameView  extends View
 
     public void onClick(DialogInterface arg0,int arg1){
         //on new game question
-        if(arg1==arg0.BUTTON_POSITIVE){//start a new game
+        if(arg1==DialogInterface.BUTTON_POSITIVE){//start a new game
             main.newGame(true);
             createBoard();
             invalidate();
         }
-        else if(arg1==arg0.BUTTON_NEGATIVE){
+        else if(arg1==DialogInterface.BUTTON_NEGATIVE){
             zoomOut();
         }
     }
