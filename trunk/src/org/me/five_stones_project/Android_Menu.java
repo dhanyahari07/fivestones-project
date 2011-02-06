@@ -2,6 +2,7 @@ package org.me.five_stones_project;
 
 import android.content.*;
 import android.graphics.*;
+import android.util.DisplayMetrics;
 import android.view.*;
 import android.view.animation.*;
 
@@ -30,8 +31,10 @@ public class Android_Menu extends View{
 
         @Override
         protected void onDraw(Canvas canvas){
-            canvas.drawBitmap(menu,display.getWidth()-50,
-                    display.getHeight()-49,null);
+        	DisplayMetrics dm=new DisplayMetrics();
+        	display.getMetrics(dm);
+            canvas.drawBitmap(menu,display.getWidth()-50*dm.density,
+                    display.getHeight()-49*dm.density,null);
         }
 
         public void createAnimation(){
