@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    		 android:layout_width="fill_parent"
+   			 android:layout_height="wrap_content"
+    		 android:orientation="vertical"
+             android:padding="20dp" >
+    <TableRow android:layout_width="fill_parent"
+        	  android:layout_height="wrap_content">
+      	<TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="20dp"
+	              android:text="@string/hlevel"/>
+        <TextView android:id="@+highscore/level"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="20dp"/>
+    </TableRow>
+	<TableRow android:layout_width="fill_parent"
+        	  android:layout_height="wrap_content"
+        	  android:paddingLeft="15dp">
+      	<TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"
+	              android:text="@string/hwins"/>
+        <TextView android:id="@+highscore/wins"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"/>
+    </TableRow>
+	<TableRow android:layout_width="fill_parent"
+	      	 	  android:layout_height="wrap_content"
+	      	  	  android:paddingLeft="15dp">
+        <TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"
+	              android:text="@string/hloses"/>
+        <TextView android:id="@+highscore/loses"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"/>
+    </TableRow>
+    <TableRow android:layout_width="fill_parent"
+        	  android:layout_height="wrap_content"
+        	  android:paddingLeft="15dp">
+      	<TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"
+	              android:text="@string/hbest"/>
+        <TextView android:id="@+highscore/best"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"/>
+     </TableRow>
+     <TableRow android:layout_width="fill_parent"
+        	  android:layout_height="wrap_content"
+        	  android:paddingLeft="15dp">
+      	<TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"
+	              android:text="@string/hdate"/>
+        <TextView android:id="@+highscore/date"
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:textColor="#fff"
+	              android:textSize="15dp"/>
+     </TableRow>
+</TableLayout>
