@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     	  package="org.me.five_stones_project"
+     	  android:installLocation="auto" 
+     	  android:versionName="2.0" 
+     	  android:versionCode="20">
+    <application android:label="@string/app_name" android:icon="@drawable/icon">
+         <activity android:name=".activity.MainActivity" 
+                   android:label="@string/app_name"
+                   android:screenOrientation="portrait"
+                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.SimpleGameActivity"
+                   android:label="@string/app_name"
+                   android:screenOrientation="portrait"
+                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:launchMode="singleTask">
+        </activity>        
+        <activity android:name=".activity.BluetoothGameActivity"
+                   android:label="@string/app_name"
+                   android:screenOrientation="portrait"
+                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:launchMode="singleTask">
+        </activity>         
+        <activity android:name=".activity.BluetoothServiceActivity"
+                   android:label="@string/app_name"
+                   android:screenOrientation="portrait"
+                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:launchMode="singleTask">
+        </activity>
+        <activity android:name=".activity.OptionsActivity"
+                   android:label="@string/app_name"
+                   android:screenOrientation="portrait"
+                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                   android:launchMode="singleTask">
+        </activity>
+    </application>
+    
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
+</manifest>
