@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>    
+    <string name="app_name">Amőba</string>     
+    
+    <!-- main activity buttons -->
+    <string name="cont">Folytatás</string>
+    <string name="start">Új játék</string>
+    <string name="level">Nehézségi szint</string>
+    <string name="high">Eredmények</string>
+    <string name="quit">Kilépés</string>
+
+    <!-- options menu -->
+    <string name="options">Beállítások</string>
+    <string name="sens">Tapintás\nérzékenysége</string>
+    <string name="style">Stílus</string>
+    <string name="language">Nyelv</string>
+    
+    <!-- levels -->
+    <string name="levelDialog">Nehézségi szint</string>
+    <string name="beginner">Kezdő</string>
+    <string name="average">Átlagos</string>
+    <string name="normal">Normál</string>
+    <string name="hard">Nehéz</string>
+    <string name="veryHard">Haladó</string>    
+    
+    <!-- new game -->
+    <string name="androidStart">Kezdhetek?</string>
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+    
+    <!-- style -->
+    <string name="classic">Hagyományos</string>
+    <string name="gomoku">Gomoku</string>
+    <string name="modern">Modern</string>
+   
+   <!-- High score View -->
+   <string name="hlevel">Szint:\t</string>
+   <string name="hwins">Győzelmek:\t</string>
+   <string name="hloses">Vereségek:\t</string>
+   <string name="hbest">Legjobb idő:\t</string>
+   <string name="hdate">Dátum:\t</string>
+    <string name="hback">Vissza</string>
+    
+    <!-- restart dialog -->
+    <string name="restartTitle">Figyelem</string>
+    <string name="restartPos">Ok</string>
+    <string name="restartNeg">Mégse</string>
+    <string name="restartMsg">
+        A változatások életbe lépéséhez esetleg újra 
+        kell indítani az alkalmazást. Folytatja?      
+    </string>
+    
+    <!-- android dialog -->
+    <string name="menuDialog"></string>
+    <string name="restart">Újrakezdés</string>
+    <string name="backToMenu">Vissza a menübe</string>
+    
+    <string name="newGame">Új játék?</string>
+    <string name="existedSavedGameTitle">Mentett játék</string>
+    <string name="existedSavedGameMsg">Törli a korábban elkezdett játékot?</string>
+    
+    <!-- bluetooth -->
+    <string name="devices">Eszközök</string>
+    <string name="refresh">Frissítés</string>
+    <string name="noBTdevice">A telefon nem rendelekezik Bluetooth eszközzel!</string>
+    <string name="enableBT">Bluetooth eszköz bekapcsolása...</string>
+    <string name="loading">Keresés, kérem várjon...</string>
+    <string name="connectionLost">A kapcsolat megszakadt a másik eszközzel.</string>
+    <string name="BTconnReq">Egy másik játékos szeretne játszani veled.</string>
+    <string name="BTconnReqAccept">Elfogad</string>
+    <string name="BTconnReqDeny">Elutasít</string>
+    <string name="BTcannotConnect">Nem sikerült kapcsolódni a kiválasztott eszközhöz.</string>
+    
+    <string name="about">Névjegy</string>
+    <string name="aboutContent">
+	    Amőba v2.0
+	    \n\n
+	    A játékosok felváltva rajzolnak egy kört vagy
+	    egy x-et az üres négyzetek valamelyikébe. Az a 
+	    játékos nyer, akinek előbb sikerül öt jelet egymás 
+	    mellé tennie vízszintes, függőleges vagy átlós irányban.
+	    \n\n
+	    Jó játékot!
+	    \n\n
+	    Fejlesztő:\n
+	    Tangl András
+    </string>
+</resources>

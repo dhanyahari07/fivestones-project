@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+main/flipper"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:inAnimation="@anim/fadein"
+             android:outAnimation="@anim/fadeout">
+    <RelativeLayout android:layout_width="fill_parent"
+                 	android:layout_height="fill_parent">
+	    <LinearLayout android:orientation="vertical"
+	                  android:layout_width="fill_parent"
+	                  android:layout_height="wrap_content"
+	                  android:layout_centerInParent="true">
+            <Button android:id="@+main/btnContinue"
+                    android:text="@string/cont"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:onClick="onClick"
+                    android:visibility="invisible"
+                    android:layout_gravity="center_horizontal"/>
+            <Button android:id="@+main/btnStart"
+                    android:text="@string/start"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:onClick="onClick"
+                    android:layout_gravity="center_horizontal"/>
+            <Button android:id="@+main/btnLevel"
+                    android:text="@string/level"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:onClick="onClick"
+                    android:layout_gravity="center_horizontal"/>
+            <Button android:id="@+main/btnHighscore"
+                    android:text="@string/high"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:onClick="onClick"
+                    android:layout_gravity="center_horizontal"/>
+            <Button android:id="@+main/btnQuit"
+                    android:text="@string/quit"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:onClick="onClick"
+                    android:layout_gravity="center_horizontal"/> 
+	    </LinearLayout>                    
+	    <RelativeLayout android:layout_alignParentBottom="true"
+	                  	android:layout_width="fill_parent"
+	                  	android:layout_height="wrap_content"
+	                  	android:padding="20dp">
+	           <ImageButton android:id="@+main/btnOptions"  
+	               			android:layout_alignParentLeft="true"       	   
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		               	    android:src="@drawable/btn_options"
+		               	    android:background="@null"
+		               	    android:onClick="onClick" />
+	           <ImageButton android:id="@+main/btnBluetooth" 
+	               			android:layout_alignParentRight="true"         	   
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		               	    android:src="@drawable/btn_bluetooth"
+		               	    android:background="@null"
+		               	    android:onClick="onClick" />
+	    </RelativeLayout>    
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="fill_parent"
+                	android:layout_height="fill_parent"
+                	android:background="#a0000000">	    
+	    <Button android:id="@+main/btnBack"
+	              android:text="@string/hback"
+	              android:layout_width="150dp"
+	              android:layout_height="wrap_content"
+	              android:onClick="onClick"
+	              android:layout_alignParentBottom="true"
+	              android:layout_centerHorizontal="true"/>
+	    <ScrollView android:layout_height="wrap_content"
+	        		android:layout_width="fill_parent"
+	        		android:layout_above="@main/btnBack">
+	        <LinearLayout android:id="@+main/highScroll"
+	            		  android:layout_width="fill_parent"
+	            		  android:layout_height="wrap_content"
+	            		  android:orientation="vertical">
+	            
+	        </LinearLayout>
+	    </ScrollView>
+	</RelativeLayout>
+</ViewFlipper>

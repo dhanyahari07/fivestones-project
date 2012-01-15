@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">Five Stones</string>
+    
+    <!-- main activity buttons -->
+    <string name="cont">Continue</string>
+    <string name="start">New Game</string>
+    <string name="level">Level</string>
+    <string name="high">High Scores</string>
+    <string name="quit">Quit</string>
+
+    <!-- options menu -->
+    <string name="levelDialog">Select Level</string>
+    <string name="options">Options</string>
+    <string name="sens">Touch\nsensitivity</string>
+    <string name="style">Style</string>
+    <string name="language">Language</string>
+    
+    <!-- levels -->
+    <string name="beginner">Beginner</string>
+    <string name="average">Average</string>
+    <string name="normal">Normal</string>
+    <string name="hard">Hard</string>
+    <string name="veryHard">Very Hard</string>
+    
+    <!-- style -->
+    <string name="classic">Classic</string>
+    <string name="gomoku">Gomoku</string>
+    <string name="modern">Modern</string>
+    
+    <string name="_none">None</string>
+    <string name="_style">Style</string>
+    <string name="_level">Level</string>
+    
+   <!-- new game -->
+   <string name="androidStart">May I start?</string>
+   <string name="yes">Yes</string>
+   <string name="no">No</string>
+   
+   <!-- High score View -->
+   <string name="hlevel">Level:\t</string>
+   <string name="hwins">Wins:\t</string>
+   <string name="hloses">Loses:\t</string>
+   <string name="hbest">Best Time:\t</string>
+   <string name="hdate">Date:\t</string>
+    <string name="hback">Back</string>
+            
+    <!-- restart dialog -->
+    <string name="restartTitle">Warning</string>
+    <string name="restartPos">Ok</string>
+    <string name="restartNeg">Cancel</string>
+    <string name="restartMsg">
+        In order to apply changes perhaps you need to restart the
+        application. Do you want to continue?        
+    </string>
+    
+    <!-- android dialog -->
+    <string name="menuDialog"></string>    
+    <string name="restart">Restart game</string>
+    <string name="backToMenu">Back to menu</string>
+    
+    <string name="newGame">New game?</string>
+    <string name="existedSavedGameTitle">Saved game</string>
+    <string name="existedSavedGameMsg">There is an unfinished game. Do you retreat?</string>
+    
+    <!-- bluetooth -->
+    <string name="devices">Devices</string>
+    <string name="refresh">Refresh</string>
+    <string name="noBTdevice">Your phone has no Bluetooth device!</string>
+    <string name="enableBT">Turning on bluetooth...</string>
+    <string name="loading">Searching, please wait...</string>
+    <string name="connectionLost">Connection lost.</string>
+    <string name="BTconnReq">Somebody wants to play with you.</string>
+    <string name="BTconnReqAccept">Accept</string>
+    <string name="BTconnReqDeny">Deny</string>
+    <string name="BTcannotConnect">Cannot connect to the selected device.</string>
+    
+    <string name="about">About</string>
+    <string name="aboutContent">
+	    Five Stones v2.0
+	    \n\n
+	    Players put their signs in an empty square by turns.
+	    The goal is to collect five signs in an unbroken row
+	    horizontally, vertically or diagonally.
+	    \n\n
+	    Developed by:\n
+	    Tangl Andras, Hungary
+    </string>
+</resources>
