@@ -55,7 +55,7 @@ public class SavedGameHandler {
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 
 		Players me = Players.values()[sp.getInt(MY_SIGN, Players.X.ordinal())];
-		Players android = handler.me == Players.X ? Players.O : Players.X;
+		Players android = me == Players.X ? Players.O : Players.X;
 		
     	enemy.initialize(me, android);
         handler.initialize(enemy, view, me, android);

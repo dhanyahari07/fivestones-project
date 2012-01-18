@@ -256,7 +256,7 @@ public class GameHandler {
 		
 		synchronized (lock) {
 			if(lastStep.player == me) {
-				if(mySteps.size() < 1)
+				if(mySteps.size() <= 1)
 					return;
 				
 				signs[lastStep.point.x][lastStep.point.y] = Players.None.ordinal();
