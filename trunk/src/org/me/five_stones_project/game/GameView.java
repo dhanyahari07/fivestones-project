@@ -290,7 +290,7 @@ public class GameView extends View {
 			default: break;
 		}
 
-        drawBoard();	
+        drawBoard();
         
         float newRatio = calculatePadding(temp);
         
@@ -331,6 +331,9 @@ public class GameView extends View {
 	}
 
 	public void drawBoard() {
+		if(board != null)
+			board.recycle();
+		
         board = Bitmap.createBitmap(handler.signs.length * cellSize, 
     		handler.signs[0].length * cellSize, Bitmap.Config.ARGB_8888);
         
