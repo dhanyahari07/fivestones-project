@@ -54,6 +54,14 @@ public class GameActivity extends BaseActivity {
                 
         setContentView(layout);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		view.releaseBoard();
+		System.gc();
+	}
 
 	public GameView getView() {
 		return view;
