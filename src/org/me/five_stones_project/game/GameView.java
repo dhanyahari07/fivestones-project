@@ -234,7 +234,8 @@ public class GameView extends View {
 		    			(int)((event.getY() - mappedPoints[1]) / ratio - padding.y) 
 		    			* handler.signs[0].length / (display.getHeight() - 2 * padding.y));
 				
-				if(handler.signs[p.x][p.y] == Players.None.ordinal()) {
+				if(p.x < handler.signs.length && p.y < handler.signs[0].length &&
+						handler.signs[p.x][p.y] == Players.None.ordinal()) {
 					handler.makeMyStep(p);
 					setCell(handler.me);
 					invalidate();
