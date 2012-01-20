@@ -332,11 +332,10 @@ public class GameView extends View {
 	}
 
 	public void drawBoard() {
-		if(board != null)
-			board.recycle();
+		releaseBoard();
 		
         board = Bitmap.createBitmap(handler.signs.length * cellSize, 
-    		handler.signs[0].length * cellSize, Bitmap.Config.ARGB_8888);
+    		handler.signs[0].length * cellSize, Bitmap.Config.RGB_565);
         
 		for (int i = 0; i < handler.signs.length; ++i)
 			for (int j = 0; j < handler.signs[0].length; ++j) {
@@ -372,6 +371,11 @@ public class GameView extends View {
 	
 	public void hideAndroidMenu() {
 		menu.setVisibility(INVISIBLE);
+	}
+	
+	public void releaseBoard() {
+		if(board != null)
+			board.recycle();
 	}
 	
 	/*
