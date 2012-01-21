@@ -98,6 +98,14 @@ public abstract class AndroidEnemy implements IEnemy {
 				dst[skipX + i][skipY + j] = src[i][j];
 	}
 	
+	protected int[][] copyBoard(int[][] board) {
+		int[][] copy = new int[board.length][board[0].length];
+		for(int i = 0; i < board.length; ++i)
+			for(int j = 0; j < board[0].length; ++j)
+				copy[i][j] = board[i][j];
+		return copy;
+	}
+	
 	private class AndroidStep extends AsyncTask<Object, Object, Point> {
 		private GameHandler handler;
 		

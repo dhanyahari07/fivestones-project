@@ -72,6 +72,8 @@ public class GameView extends View {
 	}
 	
 	public void reinitilize() {
+		cancelAnimation();
+		
 		initialize();
 		invalidate();
 	}
@@ -228,14 +230,20 @@ public class GameView extends View {
 		    	matrix.mapPoints(mappedPoints, new float[] {
 		    			0, 0, display.getWidth(), display.getHeight()});
 		    	float ratio = (mappedPoints[2] - mappedPoints[0]) / display.getWidth();
+		    	
+		    	if((event.getX() - mappedPoints[0]) / ratio < padding.x ||
+	    			(event.getY() - mappedPoints[1]) / ratio < padding.y ||
+	    			(mappedPoints[2] - event.getX()) / ratio < padding.x ||
+	    			(mappedPoints[3] - event.getY()) / ratio < padding.y)
+		    		break;
+		    	
 		    	Point p = new Point(
 		    			(int)((event.getX() - mappedPoints[0]) / ratio - padding.x) 
 		    			* handler.signs.length / (display.getWidth() - 2 * padding.x),
 		    			(int)((event.getY() - mappedPoints[1]) / ratio - padding.y) 
 		    			* handler.signs[0].length / (display.getHeight() - 2 * padding.y));
 				
-				if(p.x < handler.signs.length && p.y < handler.signs[0].length &&
-						handler.signs[p.x][p.y] == Players.None.ordinal()) {
+				if(handler.signs[p.x][p.y] == Players.None.ordinal()) {
 					handler.makeMyStep(p);
 					setCell(handler.me);
 					invalidate();
@@ -434,6 +442,12 @@ public class GameView extends View {
 		translate.set(0, 0);
 		setCell(handler.enemy);
 		handler.checkFinish();
+	}
+	
+	public void cancelAnimation() {
+		progress = 0;
+		isAnimation = false;
+		translate.set(0, 0);
 	}
 	
 	private long startTime, endTime;

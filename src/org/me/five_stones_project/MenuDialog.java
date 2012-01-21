@@ -2,7 +2,6 @@ package org.me.five_stones_project;
 
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.common.IconArrayAdapter;
-import org.me.five_stones_project.game.SavedGameHandler;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -77,7 +76,6 @@ public class MenuDialog extends AlertDialog implements OnItemClickListener,
 					.setNeutralButton(R.string.hback, this).show();
 		}
 		else if (id == 3) {// back to main menu
-			SavedGameHandler.save(GameActivity.getInstance().getHandler());
 			dismiss();
 			GameActivity.getInstance().getHandler().saveGame();
 			GameActivity.getInstance().finish();

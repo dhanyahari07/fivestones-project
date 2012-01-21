@@ -39,14 +39,11 @@ public final class R {
         public static final int o_classic=0x7f020015;
         public static final int o_gomoku=0x7f020016;
         public static final int o_modern=0x7f020017;
-        public static final int ol_gomoku=0x7f020018;
-        public static final int options=0x7f020019;
-        public static final int restart=0x7f02001a;
-        public static final int x_classic=0x7f02001b;
-        public static final int x_gomoku=0x7f02001c;
-        public static final int x_modern=0x7f02001d;
-        public static final int xl_gomoku=0x7f02001e;
-        public static final int xl_modern=0x7f02001f;
+        public static final int options=0x7f020018;
+        public static final int restart=0x7f020019;
+        public static final int x_classic=0x7f02001a;
+        public static final int x_gomoku=0x7f02001b;
+        public static final int x_modern=0x7f02001c;
     }
     public static final class highscore {
         public static final int best=0x7f080003;

@@ -17,8 +17,8 @@ import android.util.Pair;
  */
 
 public class GameHandler {
-	private static final int MAX_BOARD_X = 25;
-	private static final int MAX_BOARD_Y = 25;
+	private static final int MAX_BOARD_X = 20;
+	private static final int MAX_BOARD_Y = 20;
 	
 	public static final int INC_LEFT = 1;
 	public static final int INC_RIGHT = 2;
@@ -61,7 +61,7 @@ public class GameHandler {
 		reinitilize();
 	}
 	
-	public void reinitilize() {		
+	public void reinitilize() {
 		stat = null;
 		gameEnds = false;
 		elapsedTime = 0;
@@ -104,7 +104,9 @@ public class GameHandler {
 	}
 	
 	public void saveGame() {
-		SavedGameHandler.save(this);
+		synchronized (lock) {
+			SavedGameHandler.save(this);
+		}
 	}
 	
 	public long getElapsedTime() {
@@ -207,10 +209,11 @@ public class GameHandler {
 	public void makeMyStep(Point myStep) {
 		lastStep = new Step(myStep, me);
 		signs[myStep.x][myStep.y] = me.ordinal();
-				
+
+		ienemy.updateState(this);
+		
 		checkStatus(myStep);		
 		mySteps.add(lastStep);
-		ienemy.updateState(this);
 		
 		if(!gameEnds) 
 			enemyStep();
@@ -227,10 +230,11 @@ public class GameHandler {
 			if(lastStep.player != enemy) {
 				lastStep = new Step(point, enemy);						
 				signs[point.x][point.y] = enemy.ordinal();
-									
+
+				//ienemy.updateState(this);
+				
 				checkStatus(point);
 				enemySteps.add(lastStep);
-				ienemy.updateState(this);
 				
 				view.translate();
 			}
@@ -251,23 +255,17 @@ public class GameHandler {
 	}
 	
 	public void makeStepBack() {
-		if(!ienemy.cancel())
+		if(mySteps.size() + enemySteps.size() <= 2 || !ienemy.cancel())
 			return;
 		
 		synchronized (lock) {
-			if(lastStep.player == me) {
-				if(mySteps.size() <= 1)
-					return;
-				
+			if(lastStep.player == me) {				
 				signs[lastStep.point.x][lastStep.point.y] = Players.None.ordinal();
 				mySteps.remove(mySteps.size() - 1);
 				
-				view.clearCell(lastStep.point);				
+				view.clearCell(lastStep.point);
 			}
-			else {
-				if(mySteps.size() + enemySteps.size() <= 2)
-					return;
-				
+			else {				
 				Step step = mySteps.get(mySteps.size() - 1);
 				view.clearCell(step.point);
 				signs[step.point.x][step.point.y] = Players.None.ordinal();

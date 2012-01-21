@@ -51,6 +51,10 @@ public class TDLearner {
 		states.add(ns);
 	}
 	
+	public void removeState(State s) {
+		states.remove(s);
+	}
+	
 	public State getPreviousState() {
 		return states.get(states.size() - 1);
 	}
