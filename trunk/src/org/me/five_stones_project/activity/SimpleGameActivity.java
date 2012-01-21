@@ -12,6 +12,7 @@ import org.me.five_stones_project.type.Players;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
@@ -92,6 +93,19 @@ public class SimpleGameActivity extends GameActivity implements OnClickListener 
 	    	.setIcon(R.drawable.emo_im_happy)
 	    	.setPositiveButton(R.string.yes, this)
 			.setNegativeButton(R.string.no, this)
+			.setOnKeyListener(new OnKeyListener() {
+				
+				@Override
+				public boolean onKey(DialogInterface paramDialogInterface, int paramInt,
+						KeyEvent paramKeyEvent) {
+					if(paramInt == KeyEvent.KEYCODE_BACK) {
+						paramDialogInterface.dismiss();
+						SimpleGameActivity.this.finish();
+						return true;
+					}
+					return false;
+				}
+			})
 			.setTitle(R.string.androidStart).show();
 	}
 }

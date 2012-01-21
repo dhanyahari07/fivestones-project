@@ -29,6 +29,7 @@ public class RLPlayer extends AndroidEnemy {
 		1.9988352f, 0.14145231f, 0.45903045f, 10.694175f, 
 	};
 	
+	private State lastState;
 	private Descriptions level;
 	private TDLearner androidLearner;
 
@@ -44,40 +45,49 @@ public class RLPlayer extends AndroidEnemy {
 	}
 	
 	@Override
-	public void updateState(GameHandler handler) {
-		if(level != Descriptions.VeryHard)
-			return;
-		
-		float reward = -0.04f;
-		if(handler.stat != null) {	
-			if(handler.stat.winner == android)
-				reward = 1;
-			else if(handler.stat.winner == human)
-				reward = -1;
-			else if(handler.stat.winner == Players.Draw)
-				reward = 0f;
-		
-			androidLearner.addState(new FinalState(reward));
-			androidLearner.execute();
-			androidLearner.clearStates();			
-			
-			/*
-			 * modify the updated fi
-			 * this modification depends on the winner of the last game
-			 * the modification only necessary in the early stages of the
-			 * execution of the learning algorithm
-			float[] tetas = androidLearner.getTetas();
-			if(handler.stat.winner == android)
-				for(int i = 0; i < tetas.length / 2; ++i)
-					tetas[i] -= 0.05 * tetas[tetas.length / 2 + i];
-			else if(handler.stat.winner == human)
-				for(int i = 0; i < tetas.length / 2; ++i)
-					tetas[tetas.length / 2 + i] -= 0.05 * tetas[i];
-			*/
+	public void showEndDialog(GameHandler handler) {
+		if(level == Descriptions.VeryHard) {		
+			float reward = -0.04f;
+			if(handler.stat != null) {	
+				if(handler.stat.winner == android)
+					reward = 1;
+				else if(handler.stat.winner == human)
+					reward = -1;
+				else if(handler.stat.winner == Players.Draw)
+					reward = 0f;
+
+				if(!(lastState instanceof FinalState))
+					androidLearner.removeState(lastState);
+				
+				androidLearner.addState(new FinalState(reward));
+				androidLearner.execute();
+				androidLearner.clearStates();		
+				
+				/*
+				 * modify the updated fi
+				 * this modification depends on the winner of the last game
+				 * the modification only necessary in the early stages of the
+				 * execution of the learning algorithm
+				float[] tetas = androidLearner.getTetas();
+				if(handler.stat.winner == android)
+					for(int i = 0; i < tetas.length / 2; ++i)
+						tetas[i] -= 0.05 * tetas[tetas.length / 2 + i];
+				else if(handler.stat.winner == human)
+					for(int i = 0; i < tetas.length / 2; ++i)
+						tetas[tetas.length / 2 + i] -= 0.05 * tetas[i];
+				*/
+			}
 		}
-		else if(handler.getLastStepPlayer() == human) {
-			State s = new State(calcFi(handler.signs), androidLearner.getTetas(), reward);
-			androidLearner.addState(s);
+		
+		super.showEndDialog(handler);
+	}
+	
+	@Override
+	public void updateState(GameHandler handler) {		
+		float reward = -0.04f;		
+		if(handler.getLastStepPlayer() == human && level == Descriptions.VeryHard) {
+			lastState = new State(calcFi(handler.signs), androidLearner.getTetas(), reward);
+			androidLearner.addState(lastState);
 		}
 	}
 	
@@ -375,18 +385,19 @@ public class RLPlayer extends AndroidEnemy {
 	
 	@Override
 	protected Point findBestStep(GameHandler handler) {
-		if(isBoardEmpty(handler.signs) == 0) {
+		int[][] copy = copyBoard(handler.signs);
+		if(isBoardEmpty(copy) == 0) {
 			androidLearner.addState(new EmptyState(FI_LENGTH));
-			return new Point(handler.signs.length / 2, handler.signs[0].length / 2);
+			return new Point(copy.length / 2, copy[0].length / 2);
 		}
 	
 		ArrayList<Point> relevantSpaces = new ArrayList<Point>();
-		for(int i = 0; i < handler.signs.length; ++i)
-			for(int j = 0; j < handler.signs[0].length; ++j) {
-				if(handler.signs[i][j] != Players.None.ordinal())
+		for(int i = 0; i < copy.length; ++i)
+			for(int j = 0; j < copy[0].length; ++j) {
+				if(copy[i][j] != Players.None.ordinal())
 					continue;
 				
-				if(searchNonEmptyNeighbours(handler.signs, i, j) != 0)
+				if(searchNonEmptyNeighbours(copy, i, j) != 0)
 					relevantSpaces.add(new Point(i, j));
 			}
 		
@@ -394,10 +405,10 @@ public class RLPlayer extends AndroidEnemy {
 		for(int i = 0; i < 2; ++i) {
 			Players player = i == 0 ? android : human;
 			for(Point p : relevantSpaces) {
-				handler.signs[p.x][p.y] = player.ordinal();
+				copy[p.x][p.y] = player.ordinal();
 				Pair<Point, Point> five = PatternCounter.
-					searchForFive(handler.signs, p, player.getShift());
-				handler.signs[p.x][p.y] = Players.None.ordinal();
+					searchForFive(copy, p, player.getShift());
+				copy[p.x][p.y] = Players.None.ordinal();
 				
 				if(five != null)
 					return p;
@@ -410,17 +421,17 @@ public class RLPlayer extends AndroidEnemy {
 		float maxU = Float.NEGATIVE_INFINITY;
 		int maxDepth = (level == Descriptions.Normal ? 2 : 4);
 		for(Point point : relevantSpaces) {	
-			handler.signs[point.x][point.y] = android.ordinal();
+			copy[point.x][point.y] = android.ordinal();
 			
-			float minU = minSearch(handler.signs, 
-				updateRelevantSpaces(handler.signs, relevantSpaces, point), maxDepth, 0);
+			float minU = minSearch(copy, updateRelevantSpaces(
+					copy, relevantSpaces, point), maxDepth, 0);
 			
 			if(minU > maxU) {
 				maxU = minU;
 				best.set(point.x, point.y);
 			}
 			
-			handler.signs[point.x][point.y] = Players.None.ordinal();
+			copy[point.x][point.y] = Players.None.ordinal();
 		}
 		
 		return best;

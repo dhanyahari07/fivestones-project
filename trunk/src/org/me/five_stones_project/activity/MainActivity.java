@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity {
          */
         getWindow().setBackgroundDrawable(new BackgroundImage(this,
                 R.drawable.background, Color.BLACK));
-        getWindow().setFormat(PixelFormat.RGBA_8888);    
+        getWindow().setFormat(PixelFormat.RGB_565);
 	}
 
     @Override

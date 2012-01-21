@@ -13,20 +13,16 @@ import android.graphics.Point;
  */
 
 public class RBPlayer extends AndroidEnemy {
-	private Point last = new Point();
 	
 	@Override
-	public void updateState(GameHandler handler) {
-		this.last.set(handler.getLastStep().x, handler.getLastStep().y);
-	}
+	public void updateState(GameHandler handler) { }
 
 	@Override
 	protected Point findBestStep(GameHandler handler) {
-		int c = isBoardEmpty(handler.signs);
+		int[][] copy = copyBoard(handler.signs);
+		int c = isBoardEmpty(copy);
 		if(c == 0)
-			return new Point(handler.signs.length / 2, handler.signs[0].length / 2);
-		else if(c == 1)
-			return new Point(last.x + 1, last.y + 1);
+			return new Point(copy.length / 2, copy[0].length / 2);
 
 		int[][][] allPatterns = null;
 		if(GameOptions.getInstance().getCurrentLevel() == Descriptions.Beginner)
@@ -38,16 +34,16 @@ public class RBPlayer extends AndroidEnemy {
 			for(int p = 0; p < 2; ++p) {
 				Players player = (p == 0 ? android : human);
 				for(int[] pattern : patterns)
-					for(int i = 0; i < handler.signs.length; ++i)
-						for(int j = 0; j < handler.signs[0].length; ++j) {
-							if(handler.signs[i][j] == Players.None.ordinal()) {
-								handler.signs[i][j] = player.ordinal();
+					for(int i = 0; i < copy.length; ++i)
+						for(int j = 0; j < copy[0].length; ++j) {
+							if(copy[i][j] == Players.None.ordinal()) {
+								copy[i][j] = player.ordinal();
 							
 								Point point = new Point(i, j);
 								int cp = PatternCounter.countPattern(
-									handler.signs, pattern, point, player.getShift());
+										copy, pattern, point, player.getShift());
 								
-								handler.signs[i][j] = Players.None.ordinal();
+								copy[i][j] = Players.None.ordinal();
 								
 								if(cp != 0)
 									return point;						

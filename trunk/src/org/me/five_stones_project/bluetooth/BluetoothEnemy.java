@@ -36,7 +36,7 @@ public class BluetoothEnemy implements IEnemy {
 	}
 	
 	public void processMessage (Message msg) {
-		processor.setPoint(msg.getPoint());
+		processor.point.set(msg.getPoint().x, msg.getPoint().y);
 		osHandler.post(processor);
 	}
 	
@@ -79,7 +79,7 @@ public class BluetoothEnemy implements IEnemy {
 	}
 
 	@Override
-	public void updateState(GameHandler handler) {	
+	public void updateState(GameHandler handler) {
 		thread.write(new Message(handler.getLastStep()));
 	}
 	
@@ -88,9 +88,10 @@ public class BluetoothEnemy implements IEnemy {
 	}
 	
 	private class MessageProcessor implements Runnable {
-		private Point point;
-		public void setPoint(Point p) {
-			this.point = p;
+		public Point point;
+		
+		public MessageProcessor() {
+			point = new Point();
 		}
 		
 		@Override
