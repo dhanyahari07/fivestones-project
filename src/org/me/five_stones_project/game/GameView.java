@@ -170,6 +170,8 @@ public class GameView extends View {
 			start.set(event.getX(), event.getY());
 		} break;
 		case MotionEvent.ACTION_POINTER_DOWN :
+			if(event.getPointerCount() != 2)
+				break;
 		case MotionEvent.ACTION_POINTER_2_DOWN : {
 			mode = ZOOM_MODE;
 			originalDistance = calculateDistance(event);
@@ -182,7 +184,7 @@ public class GameView extends View {
 			}
 		} break;
 		case MotionEvent.ACTION_MOVE: {
-			if(mode == ZOOM_MODE) {
+			if(mode == ZOOM_MODE && event.getPointerCount() == 2) {
 				double newDistance = calculateDistance(event);
 				
 				if(newDistance > 10) {	                
