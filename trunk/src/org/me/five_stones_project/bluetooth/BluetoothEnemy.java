@@ -36,7 +36,7 @@ public class BluetoothEnemy implements IEnemy {
 	}
 	
 	public void processMessage (Message msg) {
-		processor.point.set(msg.getPoint().x, msg.getPoint().y);
+		processor.point = new Point(msg.getPoint().x, msg.getPoint().y);
 		osHandler.post(processor);
 	}
 	
