@@ -15,7 +15,7 @@ public class Message {
 
 	public Message() { }
 	
-	//NOTE: both the x and y coordinates are smaller than 25
+	//NOTE: both the x and y coordinates are smaller than 20
 	//see GameHandler class in ../game package
 	public Message(Point point) {
 		x = (byte) point.x;

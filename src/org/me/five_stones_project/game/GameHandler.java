@@ -296,7 +296,7 @@ public class GameHandler {
 			inc += INC_RIGHT;
 		if(step.y + 2 >= signs[0].length && signs[0].length < MAX_BOARD_Y)
 			inc += INC_BOTTOM;
-		
+
 		if(inc != 0) {
 			incrementBoard(inc);
 			view.increaseBoard(inc);

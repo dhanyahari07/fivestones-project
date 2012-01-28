@@ -59,7 +59,7 @@ public class PatternCounter {
 	public static int countPattern(int[][] matrix, int[] pattern, Point midPoint, int shift) {
 		int count = 0;
 
-		f: for(int w = Math.max(0, midPoint.x - pattern.length - 1); w <= midPoint.x; ++w)
+		f: for(int w = Math.max(0, midPoint.x - pattern.length + 1); w <= midPoint.x; ++w)
 			if(matrix.length >= w + pattern.length) {
 				for(int j = 0; j < pattern.length; ++j)
 					if((matrix[w + j][midPoint.y] << shift) != pattern[j])
@@ -67,7 +67,7 @@ public class PatternCounter {
 				count++;
 			}
 
-		f: for(int h = Math.max(0, midPoint.y - pattern.length - 1); h <= midPoint.y; ++h)
+		f: for(int h = Math.max(0, midPoint.y - pattern.length + 1); h <= midPoint.y; ++h)
 			if(matrix[0].length >= h + pattern.length) {
 				for(int j = 0; j < pattern.length; ++j)
 					if((matrix[midPoint.x][h + j] << shift) != pattern[j])
@@ -110,7 +110,7 @@ public class PatternCounter {
 	
 	public static Pair<Point, Point> searchForFive(int[][] matrix, Point midPoint, int shift) {
 		int[] pattern = Patterns.FIVE;
-		f: for(int w = Math.max(0, midPoint.x - pattern.length - 1); w <= midPoint.x; ++w)
+		f: for(int w = Math.max(0, midPoint.x - pattern.length + 1); w <= midPoint.x; ++w)
 			if(matrix.length >= w + pattern.length) {
 				for(int j = 0; j < pattern.length; ++j)
 					if((matrix[w + j][midPoint.y] << shift) != pattern[j])
@@ -120,7 +120,7 @@ public class PatternCounter {
 						new Point(w + 4, midPoint.y));
 			}
 		
-		f: for(int h = Math.max(0, midPoint.y - pattern.length - 1); h <= midPoint.y; ++h)
+		f: for(int h = Math.max(0, midPoint.y - pattern.length + 1); h <= midPoint.y; ++h)
 			if(matrix[0].length >= h + pattern.length) {
 				for(int j = 0; j < pattern.length; ++j)
 					if((matrix[midPoint.x][h + j] << shift) != pattern[j])
