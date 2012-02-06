@@ -158,7 +158,7 @@ public class BluetoothServiceActivity extends Activity implements OnItemClickLis
 	}
 	
 	public void startGameActivity() {
-		Intent intent = new Intent(MainActivity.getContext(), BluetoothGameActivity.class);
+		Intent intent = new Intent(this, BluetoothGameActivity.class);
 		startActivityForResult(intent, RETURN);
 	}
 	

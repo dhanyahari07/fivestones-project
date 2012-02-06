@@ -54,11 +54,11 @@
 		               	    android:src="@drawable/btn_options"
 		               	    android:background="@null"
 		               	    android:onClick="onClick" />
-	           <ImageButton android:id="@+main/btnBluetooth" 
+	           <ImageButton android:id="@+main/btnMulti" 
 	               			android:layout_alignParentRight="true"         	   
 		                    android:layout_width="wrap_content"
 		                    android:layout_height="wrap_content"
-		               	    android:src="@drawable/btn_bluetooth"
+		               	    android:src="@drawable/btn_multi"
 		               	    android:background="@null"
 		               	    android:onClick="onClick" />
 	    </RelativeLayout>    

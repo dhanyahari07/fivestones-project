@@ -3,7 +3,6 @@ package org.me.five_stones_project.common;
 import java.util.Date;
 import java.util.ArrayList;
 
-import org.me.five_stones_project.activity.MainActivity;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.game.GameStatistics;
 import org.me.five_stones_project.type.Descriptions;
@@ -21,28 +20,26 @@ public class HighScoreHelper {
 	private static final String DEFAULT = "__";
 	private static final String KEY_PADDING = "_highscore";
 
-	public static ArrayList<HighScore> loadHighScores() {
+	public static ArrayList<HighScore> loadHighScores(Context ctx) {
 		ArrayList<HighScore> highScores = new ArrayList<HighScore>();
 		
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences sp = currentContext.getSharedPreferences(
+		SharedPreferences sp = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 		
-		String[] levels = Descriptions.getDescriptions(Descriptions.Level);
+		String[] levels = Descriptions.getDescriptions(ctx, Descriptions.Level);
 		
 		for(String level : levels) 
-			highScores.add(loadHighScore(sp, level));
+			highScores.add(loadHighScore(ctx, sp, level));
 		
 		return highScores;
 	}
 	
-	public static void updateHighScores(GameStatistics stat) {
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences sp = currentContext.getSharedPreferences(
+	public static void updateHighScores(Context ctx, GameStatistics stat) {
+		SharedPreferences sp = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 		
-		String level = GameOptions.getInstance().getCurrentLevel().getDescription();
-		HighScore highScore = loadHighScore(sp, level);
+		String level = GameOptions.getInstance().getCurrentLevel().getDescription(ctx);
+		HighScore highScore = loadHighScore(ctx, sp, level);
 		
 		if(stat.me) {			
 			if(stat.elapsedTime < highScore.getTime()) {
@@ -56,16 +53,16 @@ public class HighScoreHelper {
 		
 		SharedPreferences.Editor ed = sp.edit();
 		
-		ed.putString(level + KEY_PADDING, highScore.toString());
+		ed.putString(level + KEY_PADDING, highScore.toString(ctx));
 		
 		ed.commit();
 	}
 	
-	private static HighScore loadHighScore(SharedPreferences sp, String level)  {
+	private static HighScore loadHighScore(Context ctx, SharedPreferences sp, String level)  {
 		String s = sp.getString(level + KEY_PADDING, DEFAULT);
 		if(!s.equals(DEFAULT))
-			return HighScore.parseHighScore(s);
+			return HighScore.parseHighScore(ctx, s);
 		else
-			return new HighScore(Descriptions.findByDescription(level));
+			return new HighScore(Descriptions.findByDescription(ctx, level));
 	}
 }

@@ -22,9 +22,9 @@ public class BluetoothGameActivity extends GameActivity {
         enemy = new BluetoothEnemy(this);
         
         if(Properties.isServer)
-        	handler.initialize(enemy, view, Players.O, Players.X);
+        	handler.initialize(enemy, view, Players.O, Players.X, false);
         else
-        	handler.initialize(enemy, view, Players.X, Players.O);
+        	handler.initialize(enemy, view, Players.X, Players.O, false);
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class BluetoothGameActivity extends GameActivity {
 	
 	public void firstStep(Point point) {
 		if(handler.getLastStepPlayer() == Players.None)
-			handler.enemyStep(point);
+			handler.enemyStep(point, true);
 	}
 	
 	@Override

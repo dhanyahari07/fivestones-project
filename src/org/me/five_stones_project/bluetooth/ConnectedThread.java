@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.GameActivity;
-import org.me.five_stones_project.activity.MainActivity;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Looper;
@@ -52,8 +51,9 @@ public class ConnectedThread extends Thread {
                 if(bytes != -1)
                 	callback.processMessage(Message.parse(buffer));
             } catch (IOException e) {
+            	Toast.makeText(GameActivity.getInstance(), R.string.connectionLost, 1000).show();
+            	
             	GameActivity.getInstance().finish();
-            	Toast.makeText(MainActivity.getContext(), R.string.connectionLost, 1000).show();
             	Looper.loop();
             	Looper.myLooper().quit();
                 break;

@@ -23,10 +23,10 @@ public class LevelDialog extends AlertDialog implements OnItemClickListener {
         super(context);
 
         int selectedLevel = 0;
-        descriptions = Descriptions.getDescriptions(Descriptions.Level);
+        descriptions = Descriptions.getDescriptions(context, Descriptions.Level);
         for(int i = 0; i < descriptions.length; ++i)
         	if(descriptions[i].equals(GameOptions.getInstance().
-        			getCurrentLevel().getDescription())) {
+        			getCurrentLevel().getDescription(context))) {
         		selectedLevel = i;
         		break;
         	}
@@ -46,8 +46,8 @@ public class LevelDialog extends AlertDialog implements OnItemClickListener {
 
      public void onItemClick(AdapterView<?> arg, View view, int pos, long id){
         GameOptions.getInstance().setCurrentLevel(
-        		Descriptions.findByDescription(descriptions[pos]));
-        GameOptions.getInstance().commit();
+        		Descriptions.findByDescription(getContext(), descriptions[pos]));
+        GameOptions.getInstance().commit(getContext());
         view.setSelected(true);
         //hide();
         dismiss();

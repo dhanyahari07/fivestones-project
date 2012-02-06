@@ -97,7 +97,7 @@ public class BluetoothEnemy implements IEnemy {
 		@Override
 		public void run() {
 			if(handler != null) {
-				handler.enemyStep(point);
+				handler.enemyStep(point, true);
 				handler = null;
 			}
 			else
