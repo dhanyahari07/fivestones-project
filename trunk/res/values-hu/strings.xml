@@ -8,12 +8,21 @@
     <string name="level">Nehézségi szint</string>
     <string name="high">Eredmények</string>
     <string name="quit">Kilépés</string>
+    
+    <!-- multi dialog -->
+    <string name="multiTitle">Két játékos mód</string>
+    <string name="multiBT">Bluetooth</string>
+    <string name="multiInternet">Internet</string>
+    <string name="multiTwoPlayer">Egy készülék</string>
 
     <!-- options menu -->
     <string name="options">Beállítások</string>
     <string name="sens">Tapintás\nérzékenysége</string>
     <string name="style">Stílus</string>
     <string name="language">Nyelv</string>
+    <string name="quality">Grafika minősége</string>
+    <string name="lowq">Alacsony</string>
+    <string name="highq">Magas</string>
     
     <!-- levels -->
     <string name="levelDialog">Nehézségi szint</string>
@@ -21,7 +30,7 @@
     <string name="average">Átlagos</string>
     <string name="normal">Normál</string>
     <string name="hard">Nehéz</string>
-    <string name="veryHard">Haladó</string>    
+    <string name="veryHard">Haladó</string>
     
     <!-- new game -->
     <string name="androidStart">Kezdhetek?</string>

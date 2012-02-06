@@ -16,7 +16,8 @@ import android.content.res.Configuration;
 public class BaseActivity extends Activity {
 	private final static String LANGUAGE_KEY = "language";
 	private static final int DEFAULT_LANGUAGE = Languages.Undefined.ordinal();
-		
+	
+	protected static int lastAction;
 	protected Languages currentLanguage;
 	
 	@Override

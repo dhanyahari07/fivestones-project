@@ -75,35 +75,35 @@ public class PatternCounter {
 				count++;
 			}
 				
-			int maxMinus = Math.min(midPoint.x, midPoint.y) < pattern.length ? 
-					Math.min(midPoint.x, midPoint.y) : pattern.length - 1;
-			int min = Math.min(matrix.length - midPoint.x - 1, matrix[0].length - midPoint.y - 1);
-			int maxPlus = min < pattern.length ? min : pattern.length - 1;
-			
-			if(maxPlus + maxMinus >= pattern.length - 1)
-				f: for(int i = maxMinus; i >= 0; --i) 
-					if(midPoint.x + pattern.length - i <= matrix.length
-							&& midPoint.y + pattern.length - i <= matrix[0].length){						
-						for(int j = 0; j < pattern.length; ++j)
-							if((matrix[midPoint.x - i + j][midPoint.y - i + j] << shift) != pattern[j])
-								continue f;
-						count++;
-				}
-			
-			maxMinus = Math.min(matrix.length - midPoint.x - 1, midPoint.y) < pattern.length ? 
-					Math.min(matrix.length - midPoint.x - 1, midPoint.y) : pattern.length - 1;				
-			maxPlus = Math.min(midPoint.x, matrix[0].length - midPoint.y - 1) < pattern.length ? 
-					Math.min(midPoint.x, matrix[0].length - midPoint.y - 1) : pattern.length - 1;
-			
-			if(maxPlus + maxMinus >= pattern.length - 1)
-				f: for(int i = maxMinus; i >= 0; --i) 
-					if(midPoint.x - pattern.length + i + 1 >= 0
-							&& midPoint.y + pattern.length - i <= matrix[0].length) {		
-						for(int j = 0; j < pattern.length; ++j)
-							if((matrix[midPoint.x + i - j][midPoint.y - i + j] << shift) != pattern[j])
-								continue f;
-						count++;
-				}
+		int maxMinus = Math.min(midPoint.x, midPoint.y) < pattern.length ? 
+				Math.min(midPoint.x, midPoint.y) : pattern.length - 1;
+		int min = Math.min(matrix.length - midPoint.x - 1, matrix[0].length - midPoint.y - 1);
+		int maxPlus = min < pattern.length ? min : pattern.length - 1;
+		
+		if(maxPlus + maxMinus >= pattern.length - 1)
+			f: for(int i = maxMinus; i >= 0; --i) 
+				if(midPoint.x + pattern.length - i <= matrix.length
+						&& midPoint.y + pattern.length - i <= matrix[0].length){						
+					for(int j = 0; j < pattern.length; ++j)
+						if((matrix[midPoint.x - i + j][midPoint.y - i + j] << shift) != pattern[j])
+							continue f;
+					count++;
+			}
+		
+		maxMinus = Math.min(matrix.length - midPoint.x - 1, midPoint.y) < pattern.length ? 
+				Math.min(matrix.length - midPoint.x - 1, midPoint.y) : pattern.length - 1;				
+		maxPlus = Math.min(midPoint.x, matrix[0].length - midPoint.y - 1) < pattern.length ? 
+				Math.min(midPoint.x, matrix[0].length - midPoint.y - 1) : pattern.length - 1;
+		
+		if(maxPlus + maxMinus >= pattern.length - 1)
+			f: for(int i = maxMinus; i >= 0; --i) 
+				if(midPoint.x - pattern.length + i + 1 >= 0
+						&& midPoint.y + pattern.length - i <= matrix[0].length) {		
+					for(int j = 0; j < pattern.length; ++j)
+						if((matrix[midPoint.x + i - j][midPoint.y - i + j] << shift) != pattern[j])
+							continue f;
+					count++;
+			}
 			
 		return count;
 	}

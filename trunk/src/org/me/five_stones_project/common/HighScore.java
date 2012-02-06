@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.me.five_stones_project.type.Descriptions;
 
+import android.content.Context;
+
 /**
  *
  * @author Tangl Andras
@@ -92,16 +94,15 @@ public class HighScore {
         return dateFormat.format(date);
 	}
 	
-	@Override
-	public String toString() {
+	public String toString(Context ctx) {
 		return "<wins>"+ Integer.toString(wins) + "</>" +
 				"<loses>"+ Integer.toString(loses) + "</>" +
-				"<level>"+ level.getDescription() + "</>" +
+				"<level>"+ level.getDescription(ctx) + "</>" +
 				"<time>"+ Long.toString(time) + "</>" +
 				"<date>"+ getFormattedDate() + "</>";
 	}
 	
-	public static HighScore parseHighScore(String s) {
+	public static HighScore parseHighScore(Context ctx, String s) {
 		HighScore highScore = new HighScore();
 		
 		String[] content = s.split("</>");
@@ -112,7 +113,7 @@ public class HighScore {
 			if(val[0].equals("<loses"))
 				highScore.setLoses(Integer.parseInt(val[1]));
 			if(val[0].equals("<level"))
-				highScore.setLevel(Descriptions.findByDescription(val[1]));
+				highScore.setLevel(Descriptions.findByDescription(ctx, val[1]));
 			if(val[0].equals("<time"))
 				highScore.setTime(Long.parseLong(val[1]));
 			if(val[0].equals("<date")) {

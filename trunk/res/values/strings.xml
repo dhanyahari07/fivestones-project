@@ -8,6 +8,12 @@
     <string name="level">Level</string>
     <string name="high">High Scores</string>
     <string name="quit">Quit</string>
+    
+    <!-- multi dialog -->
+    <string name="multiTitle">Dual player</string>
+    <string name="multiBT">Bluetooth</string>
+    <string name="multiInternet">Internet</string>
+    <string name="multiTwoPlayer">Same device</string>
 
     <!-- options menu -->
     <string name="levelDialog">Select Level</string>
@@ -15,6 +21,9 @@
     <string name="sens">Touch\nsensitivity</string>
     <string name="style">Style</string>
     <string name="language">Language</string>
+    <string name="quality">Graphics Quality</string>
+    <string name="lowq">Low</string>
+    <string name="highq">High</string>
     
     <!-- levels -->
     <string name="beginner">Beginner</string>
@@ -31,6 +40,7 @@
     <string name="_none">None</string>
     <string name="_style">Style</string>
     <string name="_level">Level</string>
+    <string name="_quality">Quality</string>
     
    <!-- new game -->
    <string name="androidStart">May I start?</string>

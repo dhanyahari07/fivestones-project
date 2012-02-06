@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.me.five_stones_project.IEnemy;
 import org.me.five_stones_project.type.Players;
+import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.ai.PatternCounter;
 import org.me.five_stones_project.common.HighScoreHelper;
 
@@ -17,8 +18,8 @@ import android.util.Pair;
  */
 
 public class GameHandler {
-	private static final int MAX_BOARD_X = 20;
-	private static final int MAX_BOARD_Y = 20;
+	public static final int MAX_BOARD_X = 20;
+	public static final int MAX_BOARD_Y = 20;
 	
 	public static final int INC_LEFT = 1;
 	public static final int INC_RIGHT = 2;
@@ -45,6 +46,7 @@ public class GameHandler {
 
 	private GameView view;
 	private IEnemy ienemy;
+	private boolean dual = false;
 	private boolean gameEnds = false;
 	private Object lock = new Object();
 	private long startTime, elapsedTime = 0;
@@ -52,9 +54,11 @@ public class GameHandler {
 							 enemySteps = new ArrayList<Step>();
 	private Step lastStep = new Step(new Point(-1, -1), Players.None);
 	
-	public void initialize(IEnemy ienemy, GameView view, Players me, Players enemy) {
+	public void initialize(IEnemy ienemy, GameView view, 
+			Players me, Players enemy, boolean dual) {
 		this.me = me;
 		this.view = view;
+		this.dual = dual;
 		this.enemy = enemy;
 		this.ienemy = ienemy;
 		
@@ -105,7 +109,7 @@ public class GameHandler {
 	
 	public void saveGame() {
 		synchronized (lock) {
-			SavedGameHandler.save(this);
+			SavedGameHandler.save(GameActivity.getInstance(), this);
 		}
 	}
 	
@@ -115,6 +119,10 @@ public class GameHandler {
 
 	public void setElapsedTime(long elapsedTime) {
 		this.elapsedTime = elapsedTime;
+	}
+	
+	public boolean isDual() {
+		return dual;
 	}
 
 	/**
@@ -214,6 +222,8 @@ public class GameHandler {
 		
 		checkStatus(myStep);		
 		mySteps.add(lastStep);
+
+		view.setCell(me);
 		
 		if(!gameEnds) 
 			enemyStep();
@@ -225,7 +235,7 @@ public class GameHandler {
 		ienemy.makeStep(this);
 	}
 	
-	public void enemyStep(Point point) {
+	public void enemyStep(Point point, boolean animation) {
 		synchronized (lock) {
 			if(lastStep.player != enemy) {
 				lastStep = new Step(point, enemy);						
@@ -236,7 +246,12 @@ public class GameHandler {
 				checkStatus(point);
 				enemySteps.add(lastStep);
 				
-				view.translate();
+				if(animation)
+					view.translate();
+				else {
+					view.setCell(enemy);
+					checkFinish();
+				}
 			}
 		}
 	}
@@ -265,7 +280,7 @@ public class GameHandler {
 				
 				view.clearCell(lastStep.point);
 			}
-			else {				
+			else {	
 				Step step = mySteps.get(mySteps.size() - 1);
 				view.clearCell(step.point);
 				signs[step.point.x][step.point.y] = Players.None.ordinal();
@@ -313,7 +328,7 @@ public class GameHandler {
 			stat.start = five.first;
 			stat.end = five.second;
 			
-			HighScoreHelper.updateHighScores(stat);
+			HighScoreHelper.updateHighScores(GameActivity.getInstance(), stat);
 		}
 		else if(isBoardFull()) {
 			gameEnds = true;

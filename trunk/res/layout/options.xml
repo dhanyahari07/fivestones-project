@@ -6,7 +6,7 @@
 	<TableLayout android:orientation="vertical"
 	             android:layout_height="fill_parent"
 	             android:layout_width="fill_parent">
-	  <TableRow android:background="#444444">
+	   <TableRow android:background="#444444">
 	      <TextView android:id="@+options/options"
 	                android:layout_height="wrap_content"
 	                android:layout_width="fill_parent"
@@ -14,7 +14,7 @@
 	                android:text="@string/options"
 	                android:textSize="16dp"
 	                android:paddingLeft="10dp"/>
-	  </TableRow>
+	   </TableRow>
 	   <TableRow android:background="#555555">
 	       <TextView android:layout_width="fill_parent"
 	                 android:layout_height="1dp"/>
@@ -40,6 +40,22 @@
 	               android:layout_gravity="center_vertical"
 	               android:paddingRight="15dp"/>
 	   </TableRow>
+	   <TableRow android:background="#444444">
+	      <TextView android:id="@+options/quality"
+	                android:layout_height="wrap_content"
+	                android:layout_width="fill_parent"
+	                android:textColor="#fff"
+	                android:text="@string/quality"
+	                android:textSize="16dp"
+	                android:paddingLeft="10dp"/>
+	   </TableRow>
+	   <ListView android:id="@+options/listQuality"
+	             android:divider="#222222"
+	             android:dividerHeight="1dp"
+	             android:textColor="#fff"
+	             android:background="#000"
+	             android:layout_height="132dp"
+	             android:layout_width="fill_parent"/>
 	   <TableRow android:background="#444444">
 	      <TextView android:id="@+options/style"
 	                android:layout_height="wrap_content"

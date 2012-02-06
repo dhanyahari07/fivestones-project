@@ -71,6 +71,5 @@ public class GameActivity extends BaseActivity {
 		return handler;
 	}	
 	
-	public void reinitilize() {
-	}
+	public void reinitilize() {	}
 }

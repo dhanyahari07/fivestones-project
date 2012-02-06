@@ -32,12 +32,13 @@ import android.view.WindowManager;
 public class GameView extends View {
 	private static final int DRAG_MODE = 1;
 	private static final int ZOOM_MODE = 2;
-	
+		
 	private AndroidMenu menu;
 	private GameHandler handler;
 	
 	private Bitmap board;
 	private Display display;
+	private int qualityModifier;
 	private int cellSize, minCellSize;
 	private int[] cellPixels, cellXPixels, cellOPixels;
 
@@ -47,9 +48,12 @@ public class GameView extends View {
 		this.menu = menu;
 		this.handler = handler;
 		
+		qualityModifier = GameOptions.getInstance().getCurrentQuality() == Descriptions.Low ? 2 : 1;
+		
 		display = ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		cellSize = BitmapFactory.decodeResource(getResources(), R.drawable.cell_classic).getWidth();
+		cellSize = BitmapFactory.decodeResource(getResources(), 
+				R.drawable.cell_classic).getWidth() / qualityModifier;
 		
 		openBitmaps();
 		
@@ -57,8 +61,8 @@ public class GameView extends View {
 	}
 	
 	private void initialize() {		
-		int width = display.getWidth() / (cellSize / 2) + 1;
-        int height = display.getHeight() / (cellSize / 2) + 1;
+		int width = display.getWidth() / (cellSize * qualityModifier / 2) + 1;
+        int height = display.getHeight() / (cellSize * qualityModifier / 2) + 1;
         this.handler.signs = new int[width][height];
         
         mode = 0;
@@ -214,16 +218,22 @@ public class GameView extends View {
 	                	//menu.hide();
 	                }
 				}
+				
+	        	invalidate();
 			}
-			else if(mode == DRAG_MODE) {
+			else if(mode == DRAG_MODE && event.getEventTime() - event.getDownTime() 
+					> GameOptions.getInstance().getSensitivity() * 100) {
 	            matrix.set(savedMatrix);
 	            matrix.postTranslate(event.getX() - start.x, event.getY() - start.y);
+				
+	        	invalidate();
 			}
-			
-        	invalidate();
 		} break;
 		case MotionEvent.ACTION_UP: {
-			if(handler.getLastStepPlayer() != handler.me && event.getEventTime() - event.getDownTime() 
+			if(handler.getLastStepPlayer() == handler.me && !handler.isDual())
+				break;
+			
+			if(event.getEventTime() - event.getDownTime() 
 					< GameOptions.getInstance().getSensitivity() * 100) {
 				
 				Point padding = new Point();
@@ -246,9 +256,12 @@ public class GameView extends View {
 		    			* handler.signs[0].length / (display.getHeight() - 2 * padding.y));
 				
 				if(handler.signs[p.x][p.y] == Players.None.ordinal()) {
-					handler.makeMyStep(p);
-					setCell(handler.me);
-					invalidate();
+					midPoint.set(p.x, p.y);
+					
+					if(handler.getLastStepPlayer() != handler.me)
+						handler.makeMyStep(p);
+					else if(handler.isDual())
+						handler.enemyStep(p, false);
 				}
 			}
 		} break;
@@ -284,33 +297,39 @@ public class GameView extends View {
 	}
 	
 	public void increaseBoard(int where) {
-		Point delta = new Point(), temp = new Point();
+		Point delta = new Point(), 
+				oldPadding = new Point(),
+				newPadding = new Point();
 		
-		float oldRatio = calculatePadding(temp);
+		float oldRatio = calculatePadding(oldPadding);
+        float[] oldMapping = new float[2];
+        matrix.mapPoints(oldMapping, new float[]{ oldPadding.x, oldPadding.y });
 		
 		switch(where) {
 			case GameHandler.INC_LEFT :
-				delta.x = 1;
+				delta.x = -1;
 				break;
 			case GameHandler.INC_TOP : 
-				delta.y = 1;
+				delta.y = -1;
 				break;
 			case GameHandler.INC_LEFT_TOP : 
-				delta.x = delta.y = 1;
+				delta.x = delta.y = -1;
 				break;
 			default: break;
 		}
 
         drawBoard();
         
-        float newRatio = calculatePadding(temp);
+        float newRatio = calculatePadding(newPadding);
+        float scale = oldRatio / newRatio;        
         
-        float[] mappedPoints = new float[1];
-        matrix.mapPoints(mappedPoints, new float[] {cellSize});        
-        matrix.postTranslate(delta.x * mappedPoints[0], delta.y * mappedPoints[0]);
+        matrix.postScale(scale, scale, 0, 0);
         
-        float scale = oldRatio / newRatio;
-        matrix.postScale(scale, scale, midPoint.x, midPoint.y);
+        float[] mappedPoints = new float[4];
+        matrix.mapPoints(mappedPoints, new float[] { newPadding.x, newPadding.y, minCellSize, minCellSize });
+        matrix.postTranslate(
+    		delta.x * mappedPoints[2] - mappedPoints[0] + oldMapping[0],
+    		delta.y * mappedPoints[3] - mappedPoints[1] + oldMapping[1]);
 	}
 	
 	private void openBitmaps(){		
@@ -373,6 +392,8 @@ public class GameView extends View {
         else if(player == Players.O)
         	board.setPixels(cellOPixels, 0, cellSize, handler.getLastStep().x * cellSize,
         			handler.getLastStep().y * cellSize, cellSize, cellSize);
+		
+		invalidate();
 	}
 	
 	public void showAndroidMenu() {

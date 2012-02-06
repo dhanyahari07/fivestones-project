@@ -24,7 +24,7 @@ import android.widget.SeekBar;
 public class OptionsActivity extends BaseActivity {
 	private SeekBar sensitivity;
 	private Languages selectedLanguage;
-	private Descriptions selectedStyle; 
+	private Descriptions selectedStyle, selectedQuality; 
 
 	@Override
 	protected void onResume() {
@@ -38,11 +38,37 @@ public class OptionsActivity extends BaseActivity {
 
 		sensitivity = (SeekBar) findViewById(R.options.seekbarsens);
 		sensitivity.setProgress(instance.getSensitivity());
+		
+		/*
+		 * create quality list
+		 */
+		final String[] qualityDescriptions = Descriptions.getDescriptions(this, Descriptions.Quality);
+		
+		ArrayAdapter<String> qualityAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_multiple_choice, qualityDescriptions);
+
+		ListView qualityList = (ListView) findViewById(R.options.listQuality);
+		qualityList.setAdapter(qualityAdapter);
+		qualityList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
+				selectedQuality = Descriptions.findByDescription(OptionsActivity.this, qualityDescriptions[pos]);
+			}
+		});
+		qualityList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		
+		for (int i = 0; i < qualityDescriptions.length; ++i)
+			if (instance.getCurrentQuality().getDescription(this).equals(qualityDescriptions[i])) {
+				qualityList.setItemChecked(i, true);
+				selectedQuality = Descriptions.findByDescription(this, qualityDescriptions[i]);
+				break;
+			}
 
 		/*
 		 * create style list
 		 */
-		final String[] styleDescriptions = Descriptions.getDescriptions(Descriptions.Style);
+		final String[] styleDescriptions = Descriptions.getDescriptions(this, Descriptions.Style);
 		
 		ArrayAdapter<String> styleAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_multiple_choice, styleDescriptions);
@@ -53,15 +79,15 @@ public class OptionsActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-				selectedStyle = Descriptions.findByDescription(styleDescriptions[pos]);
+				selectedStyle = Descriptions.findByDescription(OptionsActivity.this, styleDescriptions[pos]);
 			}
 		});
 		styleList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		
 		for (int i = 0; i < styleDescriptions.length; ++i)
-			if (instance.getCurrentStyle().getDescription().equals(styleDescriptions[i])) {
+			if (instance.getCurrentStyle().getDescription(this).equals(styleDescriptions[i])) {
 				styleList.setItemChecked(i, true);
-				selectedStyle = Descriptions.findByDescription(styleDescriptions[i]);
+				selectedStyle = Descriptions.findByDescription(this, styleDescriptions[i]);
 				break;
 			}
 		
@@ -132,7 +158,8 @@ public class OptionsActivity extends BaseActivity {
 		
 		instance.setSensitivity(sensitivity.getProgress());
 		instance.setCurrentStyle(selectedStyle);
+		instance.setCurrentQuality(selectedQuality);
 		
-		instance.commit();
+		instance.commit(this);
 	}
 }

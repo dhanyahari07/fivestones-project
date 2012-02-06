@@ -122,7 +122,7 @@ public abstract class AndroidEnemy implements IEnemy {
 		protected void onPostExecute(Point result) {
 			super.onPostExecute(result);
 			
-			handler.enemyStep(result);
+			handler.enemyStep(result, true);
 		}
 	}
 }

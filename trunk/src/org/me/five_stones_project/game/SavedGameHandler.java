@@ -2,7 +2,6 @@ package org.me.five_stones_project.game;
 
 import java.util.BitSet;
 
-import org.me.five_stones_project.activity.MainActivity;
 import org.me.five_stones_project.ai.AndroidEnemy;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.type.Players;
@@ -28,12 +27,11 @@ public class SavedGameHandler {
 	private static final String LAST_STEP_Y = "last_step_y";
 	private static final String LAST_STEP_PLAYER = "last_step_palyer";
 
-	public static void save(GameHandler handler) {
+	public static void save(Context ctx, GameHandler handler) {
 		if(isBoardEmpty(handler.signs))
 			return;
 		
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences.Editor editor = currentContext.getSharedPreferences(
+		SharedPreferences.Editor editor = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
 		
 		editor.putLong(ELAPSED_TIME, handler.getElapsedTime());
@@ -49,16 +47,15 @@ public class SavedGameHandler {
 		editor.commit();
 	}
 	
-	public static void load(GameHandler handler, AndroidEnemy enemy, GameView view) {
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences sp = currentContext.getSharedPreferences(
+	public static void load(Context ctx, GameHandler handler, AndroidEnemy enemy, GameView view) {
+		SharedPreferences sp = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 
 		Players me = Players.values()[sp.getInt(MY_SIGN, Players.X.ordinal())];
 		Players android = me == Players.X ? Players.O : Players.X;
 		
     	enemy.initialize(me, android);
-        handler.initialize(enemy, view, me, android);
+        handler.initialize(enemy, view, me, android, false);
         
         handler.setElapsedTime(sp.getLong(ELAPSED_TIME, 0));
 		handler.signs = decompressBoard(sp.getInt(ROW_COUNT, 0), 
@@ -67,17 +64,15 @@ public class SavedGameHandler {
 				sp.getBoolean(LAST_STEP_PLAYER, true) ? handler.me : handler.enemy);
 	}
 	
-	public static boolean isSavedGame() {
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences sp = currentContext.getSharedPreferences(
+	public static boolean isSavedGame(Context ctx) {
+		SharedPreferences sp = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 		
 		return sp.getBoolean(IS_SAVED_GAME, false);
 	}
 	
-	public static void clearSavedGame() {
-		Context currentContext = MainActivity.getContext();
-		SharedPreferences.Editor editor = currentContext.getSharedPreferences(
+	public static void clearSavedGame(Context ctx) {
+		SharedPreferences.Editor editor = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
 		
 		editor.putBoolean(IS_SAVED_GAME, false);

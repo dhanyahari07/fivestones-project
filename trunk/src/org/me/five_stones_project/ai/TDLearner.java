@@ -8,10 +8,10 @@ import java.util.ArrayList;
  */
 
 public class TDLearner {
-	private float alfa = 0.05f;//0.2f;
+	private float alfa = 0.05f;
 	
-	private float gamma = .89f;	
-	private float lambda = 0.2f;
+	private float gamma = .748f;	
+	private float lambda = 0.1f;
 
 	private float[] tetas;
 
@@ -22,10 +22,10 @@ public class TDLearner {
 	}
 
 	public void execute() {	
-		/* TD(gamma) with eligibility traces
+		// TD(gamma) with eligibility traces
 		float[] e = new float[tetas.length];
 		
-		for(int i = 0; i < states.size() - 1; ++i) {
+		for(int i = Math.max(states.size() - 10, 0); i < states.size() - 1 ; ++i) {
 			State s = states.get(i);
 			State ns = states.get(i + 1);
 			
@@ -34,16 +34,6 @@ public class TDLearner {
 				e[j] = gamma * lambda * e[j] + s.getFi(j);
 			for(int j = 0; j < tetas.length; ++j)
 				tetas[j] += alfa * delta * e[j];
-		}*/
-		//simple TD(gamma) with backward evaluation
-		for(int i = states.size() - 2; i >= Math.max(0, states.size() - 10); --i) {
-			State s = states.get(i);
-			State ns = states.get(i + 1);
-			s.calculateUtility(tetas);
-			ns.calculateUtility(tetas);
-			for(int j = 0; j < tetas.length; ++j)
-				tetas[j] += alfa * (ns.getReward() + gamma * ns.getUtility() - s.getUtility()) * s.getFi(j);
-			s.setUtility(ns.getUtility() + s.getReward());
 		}
 	}
 	

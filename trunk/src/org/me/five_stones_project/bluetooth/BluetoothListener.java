@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.BluetoothGameActivity;
-import org.me.five_stones_project.activity.MainActivity;
 import org.me.five_stones_project.common.Properties;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -24,10 +24,10 @@ import android.os.Looper;
 public class BluetoothListener extends Thread {	
 	private static BluetoothListener listener = null;
 
-	public static void startListening() {
+	public static void startListening(Context ctx) {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		if (adapter != null && adapter.isEnabled()) {
-		    listener = new BluetoothListener(adapter, false);
+		    listener = new BluetoothListener(ctx, adapter, false);
 		    listener.start();
 		}
 	}
@@ -37,11 +37,13 @@ public class BluetoothListener extends Thread {
 			listener.cancel();
 	}
 	
+	private Context ctx;
     private String mSocketType;
 	private BluetoothSocket socket;
 	private final BluetoothServerSocket mmServerSocket;
 
-    public BluetoothListener(BluetoothAdapter adapter, boolean secure) {
+    private BluetoothListener(Context ctx, BluetoothAdapter adapter, boolean secure) {
+    	this.ctx = ctx;
         BluetoothServerSocket tmpSocket = null;
         mSocketType = secure ? "Secure" : "Insecure";
 
@@ -70,7 +72,7 @@ public class BluetoothListener extends Thread {
             }
 
             if (socket != null) {
-            	new AlertDialog.Builder(MainActivity.getContext())
+            	new AlertDialog.Builder(ctx)
             		.setMessage(R.string.BTconnReq)
             		.setPositiveButton(R.string.BTconnReqAccept, new OnClickListener() {
 						
@@ -81,8 +83,8 @@ public class BluetoothListener extends Thread {
 							
 							Properties.socket = socket;
 							Properties.isServer = false;
-							Intent intent = new Intent(MainActivity.getContext(), BluetoothGameActivity.class);
-							MainActivity.getContext().startActivity(intent);
+							Intent intent = new Intent(ctx, BluetoothGameActivity.class);
+							ctx.startActivity(intent);
 						}
 					})
 					.setNegativeButton(R.string.BTconnReqDeny, null).show();
