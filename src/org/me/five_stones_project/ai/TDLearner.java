@@ -2,6 +2,8 @@ package org.me.five_stones_project.ai;
 
 import java.util.ArrayList;
 
+import org.me.five_stones_project.type.Descriptions;
+
 /**
  *
  * @author Tangl Andras
@@ -10,15 +12,28 @@ import java.util.ArrayList;
 public class TDLearner {
 	private float alfa = 0.05f;
 	
-	private float gamma = .748f;	
-	private float lambda = 0.1f;
+	private float gamma;	
+	private float lambda;
 
 	private float[] tetas;
 
 	private ArrayList<State> states = new ArrayList<State>();
 	
-	public TDLearner(int patternSize) {
+	public TDLearner(Descriptions level, int patternSize) {
 		tetas = new float[patternSize];
+		
+		if(level == Descriptions.Normal) {
+			gamma = .748f;
+			lambda = 0.1f;
+		}
+		else if(level == Descriptions.Hard) {
+			gamma = .71f;
+			lambda = 0.1f;
+		}
+		else if(level == Descriptions.VeryHard) {
+			gamma = .69f;
+			lambda = 0.1f;
+		}
 	}
 
 	public void execute() {	

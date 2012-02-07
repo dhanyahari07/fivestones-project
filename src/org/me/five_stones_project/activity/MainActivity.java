@@ -221,6 +221,8 @@ public class MainActivity extends BaseActivity {
     		GameOptions.getInstance().setCurrentQuality(Descriptions.High);
     	} catch(OutOfMemoryError err) {
     		GameOptions.getInstance().setCurrentQuality(Descriptions.Low);
+    	} catch(Exception x) {
+    		GameOptions.getInstance().setCurrentQuality(Descriptions.Low);
     	}
     	
     	if(b != null)

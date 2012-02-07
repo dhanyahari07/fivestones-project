@@ -69,4 +69,9 @@ public enum Descriptions {
 	private static String resolveStringResource(Context ctx, int resId) {
 		return ctx.getResources().getString(resId);
 	}
+	
+	@Override
+	public String toString() {
+		return Integer.toString(description);
+	}
 }
