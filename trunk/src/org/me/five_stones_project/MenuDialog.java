@@ -77,7 +77,6 @@ public class MenuDialog extends AlertDialog implements OnItemClickListener,
 		}
 		else if (id == 3) {// back to main menu
 			dismiss();
-			GameActivity.getInstance().getHandler().saveGame();
 			GameActivity.getInstance().finish();
 		}
 	}

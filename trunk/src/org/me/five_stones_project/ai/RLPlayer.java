@@ -22,12 +22,27 @@ import android.util.Pair;
 
 public class RLPlayer extends AndroidEnemy {
 	private static final int FI_LENGTH = 16;
-	private static final float[] TETAS = new float[] {
-		-4.397558f, 0.06014589f, -0.25848636f, -0.208716f,
-		-0.2103642f, -0.11668284f, -0.1295836f, -1.3829728f,
-		4.02998f, -0.28665635f, -0.11349648f, 1.6050756f,
-		0.17167139f, -0.14448297f, 0.14321822f, 10.694175f
+	private static final float[] TETAS_AVERAGE = new float[] {
+		-4.313136f, 0.30191365f, 0.07819245f, -0.5080799f, 
+		-0.12593895f, 0.15191746f, -0.12797777f, -1.7366338f, 
+		4.114403f, -0.061020236f, 0.11758678f, 1.4031281f, 
+		0.25609645f, 0.10963763f, 0.6911828f, 10.694175f
 	};
+	private static final float[] TETAS_HARD = new float[] {
+		-4.272424f, 0.14894915f, -0.14187469f, -0.53532195f, 
+		-0.10918106f, 0.1701392f, -0.47795573f, -2.1111917f, 
+		4.155114f, 0.078238785f, 0.28335503f, 1.6194795f, 
+		0.29680935f, 0.09223148f, 0.69250315f, 10.694175f
+	};
+	private static final float[] TETAS_VERY_HARD = new float[] {
+		-4.27384f, 0.13597782f, -0.32545364f, -0.35970494f, 
+		0.033162206f, 0.010962212f, -0.15696159f, -2.0269232f, 
+		4.1537f, -0.06032279f, -0.007661348f, 1.6130447f, 
+		0.29539186f, 0.31115854f, 0.7883758f, 10.694175f
+	};
+	
+	private float[] tetas;
+	private int minimaxDepth;
 	
 	private State lastState;
 	private Descriptions level;
@@ -35,14 +50,23 @@ public class RLPlayer extends AndroidEnemy {
 	private float alfa, beta, MAX = 1, attack = 1.2f;
 
 	public RLPlayer() {
-		androidLearner = new TDLearner(FI_LENGTH);
 		level = GameOptions.getInstance().getCurrentLevel();
+		androidLearner = new TDLearner(level, FI_LENGTH);
 		
-		if(level == Descriptions.VeryHard)
-			load();
-		else
-			/* use default teta array */
-			androidLearner.setTetas(TETAS);
+		if(level == Descriptions.Normal) {
+			minimaxDepth = 2;
+			tetas = TETAS_AVERAGE;
+		}
+		else if(level == Descriptions.Hard) {
+			minimaxDepth = 4;
+			tetas = TETAS_HARD;
+		}
+		else if(level == Descriptions.VeryHard) {
+			minimaxDepth = 6;
+			tetas = TETAS_VERY_HARD;
+		}
+		
+		load();
 	}
 	
 	@Override
@@ -84,7 +108,7 @@ public class RLPlayer extends AndroidEnemy {
 	@Override
 	public void updateState(GameHandler handler) {		
 		float reward = -0.04f;		
-		if(handler.getLastStepPlayer() == human && level == Descriptions.VeryHard) {
+		if(handler.getLastStepPlayer() == human) {
 			lastState = new State(calcFi(handler.signs), androidLearner.getTetas(), reward);
 			androidLearner.addState(lastState);
 		}
@@ -92,8 +116,7 @@ public class RLPlayer extends AndroidEnemy {
 	
 	@Override
 	protected void finish() {
-		if(level == Descriptions.VeryHard)
-			save();
+		save();
 	}
 	
 	private float[] calcFi(int[][] board) {
@@ -418,20 +441,12 @@ public class RLPlayer extends AndroidEnemy {
 		alfa = Float.NEGATIVE_INFINITY;
 		beta = Float.POSITIVE_INFINITY;
 		float maxU = Float.NEGATIVE_INFINITY;
-
-		int maxDepth = 0;
-		if(level == Descriptions.Normal)
-			maxDepth = 2;
-		else if(level == Descriptions.Hard)
-			maxDepth = 4;
-		else if(level == Descriptions.VeryHard)
-			maxDepth = 6;
 		
 		for(Point point : relevantSpaces) {	
 			copy[point.x][point.y] = android.ordinal();
 			
 			float minU = minSearch(copy, updateRelevantSpaces(
-					copy, relevantSpaces, point, 1), maxDepth, 0);
+					copy, relevantSpaces, point, 1), minimaxDepth, 0);
 			
 			if(minU > maxU) {
 				maxU = minU;
@@ -544,22 +559,22 @@ public class RLPlayer extends AndroidEnemy {
 		SharedPreferences.Editor ed = currentContext.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
 		
-		for(int i = 0; i < TETAS.length; ++i)
-			ed.putFloat(TETA + Integer.toString(i), androidLearner.getTetas()[i]);
+		for(int i = 0; i < tetas.length; ++i)
+			ed.putFloat(TETA + level.toString() + "_" + Integer.toString(i), androidLearner.getTetas()[i]);
 		
 		ed.commit();
 	}
 	
 	private void load() {
-		float[] tetas = new float[TETAS.length];
+		float[] teta = new float[tetas.length];
 		
 		Context currentContext = GameActivity.getInstance();
 		SharedPreferences sp = currentContext.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 		
-		for(int i = 0; i < TETAS.length; ++i)
-			tetas[i] = sp.getFloat(TETA + Integer.toString(i), TETAS[i]);
+		for(int i = 0; i < tetas.length; ++i)
+			teta[i] = sp.getFloat(TETA + Integer.toString(i), tetas[i]);
 		
-		androidLearner.setTetas(tetas);
+		androidLearner.setTetas(teta);
 	}
 }
