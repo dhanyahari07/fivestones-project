@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		
 		GameOptions.initialize(this);
-		        
+		
         /*
          * first start
          */
@@ -140,7 +140,8 @@ public class MainActivity extends BaseActivity {
         else if(view.getId() == R.main.btnMulti) {
         	String[] items = new String[] {
         			getResources().getString(R.string.multiBT),
-        			getResources().getString(R.string.multiTwoPlayer)
+        			getResources().getString(R.string.multiTwoPlayer),
+        			getResources().getString(R.string.multiInternet)
 			};
         	new AlertDialog.Builder(this)
         		.setTitle(R.string.multiTitle)
@@ -159,6 +160,11 @@ public class MainActivity extends BaseActivity {
 							intent = new Intent(MainActivity.this, 
 				        			DualGameActivity.class);
 				        	startActivity(intent);
+							break;
+						case 2 : 
+							intent = new Intent(MainActivity.this,
+									InternetGameActivity.class);
+							startActivity(intent);
 							break;
 						default: break;
 						}

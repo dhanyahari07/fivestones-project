@@ -109,8 +109,9 @@ public final class R {
         public static final int _none=0x7f05001a;
         public static final int _quality=0x7f05001d;
         public static final int _style=0x7f05001b;
-        public static final int about=0x7f05003b;
-        public static final int aboutContent=0x7f05003c;
+        public static final int about=0x7f050043;
+        public static final int aboutContent=0x7f050044;
+        public static final int again=0x7f050040;
         /**  new game 
  new game 
          */
@@ -118,13 +119,19 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int average=0x7f050013;
         public static final int backToMenu=0x7f05002d;
+        public static final int begin=0x7f05003c;
         /**  levels 
          */
         public static final int beginner=0x7f050012;
+        public static final int cancel=0x7f050041;
         /**  style 
  style 
          */
         public static final int classic=0x7f050017;
+        /**  internet 
+ internet 
+         */
+        public static final int connect=0x7f05003b;
         public static final int connectionLost=0x7f050036;
         /**  main activity buttons 
  main activity buttons 
@@ -137,6 +144,7 @@ public final class R {
         public static final int enableBT=0x7f050034;
         public static final int existedSavedGameMsg=0x7f050030;
         public static final int existedSavedGameTitle=0x7f05002f;
+        public static final int exitQuestion=0x7f05003d;
         public static final int gomoku=0x7f050018;
         public static final int hard=0x7f050015;
         public static final int hback=0x7f050026;
@@ -170,10 +178,13 @@ public final class R {
          */
         public static final int multiTitle=0x7f050006;
         public static final int multiTwoPlayer=0x7f050009;
+        public static final int networkError=0x7f050042;
         public static final int newGame=0x7f05002e;
         public static final int no=0x7f050020;
         public static final int noBTdevice=0x7f050033;
+        public static final int noEnemy=0x7f05003f;
         public static final int normal=0x7f050014;
+        public static final int opponentStart=0x7f05003e;
         /**  options menu 
          */
         public static final int options=0x7f05000b;

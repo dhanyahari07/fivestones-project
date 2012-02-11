@@ -4,6 +4,7 @@ import org.me.five_stones_project.IEnemy;
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.BluetoothGameActivity;
 import org.me.five_stones_project.activity.GameActivity;
+import org.me.five_stones_project.common.Message;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.game.GameHandler;
 
@@ -35,7 +36,7 @@ public class BluetoothEnemy implements IEnemy {
 		processor = new MessageProcessor();
 	}
 	
-	public void processMessage (Message msg) {
+	public void processMessage(Message msg) {
 		processor.point = new Point(msg.getPoint().x, msg.getPoint().y);
 		osHandler.post(processor);
 	}

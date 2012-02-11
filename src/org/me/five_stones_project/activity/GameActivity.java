@@ -1,6 +1,7 @@
 package org.me.five_stones_project.activity;
 
 import org.me.five_stones_project.AndroidMenu;
+import org.me.five_stones_project.IEnemy;
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.common.BackgroundImage;
 import org.me.five_stones_project.game.GameHandler;
@@ -25,6 +26,7 @@ public class GameActivity extends BaseActivity {
 		return instance;
 	}
 	
+	protected IEnemy enemy;
 	protected GameView view;
 	protected AndroidMenu menu;
 	protected GameHandler handler;

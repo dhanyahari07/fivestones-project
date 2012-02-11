@@ -1,11 +1,16 @@
 package org.me.five_stones_project.activity;
 
+import org.me.five_stones_project.R;
 import org.me.five_stones_project.bluetooth.BluetoothEnemy;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.type.Players;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 /**
  *
@@ -13,7 +18,6 @@ import android.os.Bundle;
  */
 
 public class BluetoothGameActivity extends GameActivity {
-	private BluetoothEnemy enemy;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,26 @@ public class BluetoothGameActivity extends GameActivity {
 	protected void onStop() {
 		super.onStop();
 		
-		enemy.close();
+		((BluetoothEnemy)enemy).close();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			new AlertDialog.Builder(this)
+				.setMessage(R.string.exitQuestion)
+			    .setPositiveButton(R.string.yes, new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						finish();
+					}
+				})
+				.setNegativeButton(R.string.no, null)
+				.show();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 	
 	public void firstStep(Point point) {

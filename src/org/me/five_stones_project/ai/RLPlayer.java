@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.util.Log;
 import android.util.Pair;
 
 /**
@@ -22,48 +23,33 @@ import android.util.Pair;
 
 public class RLPlayer extends AndroidEnemy {
 	private static final int FI_LENGTH = 16;
-	private static final float[] TETAS_AVERAGE = new float[] {
-		-4.313136f, 0.30191365f, 0.07819245f, -0.5080799f, 
-		-0.12593895f, 0.15191746f, -0.12797777f, -1.7366338f, 
-		4.114403f, -0.061020236f, 0.11758678f, 1.4031281f, 
-		0.25609645f, 0.10963763f, 0.6911828f, 10.694175f
+	private static final float[] DEFAULT_TETAS = new float[] {
+		-0.121059686f, -0.082883164f, -0.039765455f, -0.16637056f, 
+		-0.12305969f, -0.09523758f, -0.13617685f, -0.48178604f, 
+		-0.11905968f, -0.08847007f, -0.0012132514f, 0.15f, 
+		-0.11705968f, -0.08587187f, 0.1f, 0.3f
 	};
-	private static final float[] TETAS_HARD = new float[] {
-		-4.272424f, 0.14894915f, -0.14187469f, -0.53532195f, 
-		-0.10918106f, 0.1701392f, -0.47795573f, -2.1111917f, 
-		4.155114f, 0.078238785f, 0.28335503f, 1.6194795f, 
-		0.29680935f, 0.09223148f, 0.69250315f, 10.694175f
-	};
-	private static final float[] TETAS_VERY_HARD = new float[] {
-		-4.27384f, 0.13597782f, -0.32545364f, -0.35970494f, 
-		0.033162206f, 0.010962212f, -0.15696159f, -2.0269232f, 
-		4.1537f, -0.06032279f, -0.007661348f, 1.6130447f, 
-		0.29539186f, 0.31115854f, 0.7883758f, 10.694175f
-	};
-	
-	private float[] tetas;
+
 	private int minimaxDepth;
+	private float[] tetas = new float[FI_LENGTH];
+	private float alfa, beta, MAX = 1, attack = 1.2f;
 	
 	private State lastState;
 	private Descriptions level;
 	private TDLearner androidLearner;
-	private float alfa, beta, MAX = 1, attack = 1.2f;
 
 	public RLPlayer() {
+		androidLearner = new TDLearner(FI_LENGTH);
 		level = GameOptions.getInstance().getCurrentLevel();
-		androidLearner = new TDLearner(level, FI_LENGTH);
 		
 		if(level == Descriptions.Normal) {
 			minimaxDepth = 2;
-			tetas = TETAS_AVERAGE;
 		}
 		else if(level == Descriptions.Hard) {
 			minimaxDepth = 4;
-			tetas = TETAS_HARD;
 		}
 		else if(level == Descriptions.VeryHard) {
 			minimaxDepth = 6;
-			tetas = TETAS_VERY_HARD;
 		}
 		
 		load();
@@ -71,38 +57,31 @@ public class RLPlayer extends AndroidEnemy {
 	
 	@Override
 	public void showEndDialog(GameHandler handler) {
-		float reward = -0.04f;
-		if(handler.stat != null) {	
-			if(handler.stat.winner == android)
-				reward = MAX;
-			else if(handler.stat.winner == human)
-				reward = -MAX;
-			else if(handler.stat.winner == Players.Draw)
-				reward = 0f;
-
-			if(!(lastState instanceof FinalState))
-				androidLearner.removeState(lastState);
-			
-			androidLearner.addState(new FinalState(reward));
-			androidLearner.execute();
-			androidLearner.clearStates();		
-			
-			/*
-			 * modify the updated fi
-			 * this modification depends on the winner of the last game
-			 * the modification only necessary in the early stages of the
-			 * execution of the learning algorithm
-			float[] tetas = androidLearner.getTetas();
-			if(handler.stat.winner == android)
-				for(int i = 0; i < tetas.length / 2; ++i)
-					tetas[i] -= 0.05 * tetas[tetas.length / 2 + i];
-			else if(handler.stat.winner == human)
-				for(int i = 0; i < tetas.length / 2; ++i)
-					tetas[tetas.length / 2 + i] -= 0.05 * tetas[i];
-			*/
+		if(level == Descriptions.VeryHard) {
+			float reward = -0.04f;
+			if(handler.stat != null) {	
+				if(handler.stat.winner == android)
+					reward = MAX;
+				else if(handler.stat.winner == human)
+					reward = -MAX;
+				else if(handler.stat.winner == Players.Draw)
+					reward = 0f;
+	
+				if(!(lastState instanceof FinalState))
+					androidLearner.removeState(lastState);
+				
+				androidLearner.addState(new FinalState(reward));
+				androidLearner.execute();
+				androidLearner.clearStates();
+			}
 		}
 		
 		super.showEndDialog(handler);
+		
+		String a = "";
+		for(int i = 0; i < androidLearner.getTetas().length; ++i)
+			a += androidLearner.getTetas()[i] + "_";
+		Log.i("tag", a);
 	}
 	
 	@Override
@@ -560,7 +539,7 @@ public class RLPlayer extends AndroidEnemy {
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
 		
 		for(int i = 0; i < tetas.length; ++i)
-			ed.putFloat(TETA + level.toString() + "_" + Integer.toString(i), androidLearner.getTetas()[i]);
+			ed.putFloat(TETA + Integer.toString(i), androidLearner.getTetas()[i]);
 		
 		ed.commit();
 	}
@@ -573,7 +552,7 @@ public class RLPlayer extends AndroidEnemy {
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 		
 		for(int i = 0; i < tetas.length; ++i)
-			teta[i] = sp.getFloat(TETA + Integer.toString(i), tetas[i]);
+			teta[i] = sp.getFloat(TETA + Integer.toString(i), DEFAULT_TETAS[i]);
 		
 		androidLearner.setTetas(teta);
 	}

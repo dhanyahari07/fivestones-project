@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.GameActivity;
+import org.me.five_stones_project.common.Message;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Looper;

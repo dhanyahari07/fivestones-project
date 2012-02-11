@@ -81,10 +81,17 @@ public class BluetoothListener extends Thread {
 							dialog.dismiss();
 							listener.interrupt();
 							
-							Properties.socket = socket;
-							Properties.isServer = false;
-							Intent intent = new Intent(ctx, BluetoothGameActivity.class);
-							ctx.startActivity(intent);
+							try {
+								socket.getOutputStream().write(new byte[] { 0 });
+								socket.getOutputStream().flush();
+								
+								Properties.socket = socket;
+								Properties.isServer = false;
+								Intent intent = new Intent(ctx, BluetoothGameActivity.class);
+								ctx.startActivity(intent);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					})
 					.setNegativeButton(R.string.BTconnReqDeny, null).show();

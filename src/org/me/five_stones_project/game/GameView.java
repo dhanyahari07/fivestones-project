@@ -73,13 +73,12 @@ public class GameView extends View {
     	savedMatrix = new Matrix();
         
 		drawBoard();
+		invalidate();
 	}
 	
 	public void reinitilize() {
-		cancelAnimation();
-		
+		cancelAnimation();		
 		initialize();
-		invalidate();
 	}
 
 	@Override
