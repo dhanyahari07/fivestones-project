@@ -21,7 +21,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -209,9 +208,9 @@ public class BluetoothServiceActivity extends Activity implements OnItemClickLis
 	    	if(mmSocket == null)
 	    		return;
 	    	
-	    	Looper.prepare();	 
 	        try {
 	            mmSocket.connect();
+	            mmSocket.getInputStream().read();
 	        } catch (IOException connectException) {
 	            try {
 	                connectException.printStackTrace();
@@ -219,9 +218,13 @@ public class BluetoothServiceActivity extends Activity implements OnItemClickLis
 	            } catch (IOException closeException) { 
 	            	closeException.printStackTrace();
 	            }
-	            Toast.makeText(getBaseContext(), R.string.BTcannotConnect, 1000).show();
-            	Looper.loop();
-            	Looper.myLooper().quit();
+	            runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+			            Toast.makeText(getBaseContext(), R.string.BTcannotConnect, 1000).show();
+					}
+				});
 	            return;
 	        }
 	 

@@ -12,7 +12,7 @@
     <!-- multi dialog -->
     <string name="multiTitle">Dual player</string>
     <string name="multiBT">Bluetooth</string>
-    <string name="multiInternet">Internet</string>
+    <string name="multiInternet">Internet (beta)</string>
     <string name="multiTwoPlayer">Same device</string>
 
     <!-- options menu -->
@@ -85,9 +85,19 @@
     <string name="BTconnReqDeny">Deny</string>
     <string name="BTcannotConnect">Cannot connect to the selected device.</string>
     
+    <!-- internet -->
+    <string name="connect">Search for enemy. Please Wait.</string>
+    <string name="begin">You start</string>
+    <string name="exitQuestion">Do you really want to exit?</string>
+    <string name="opponentStart">Enemy starts</string>
+    <string name="noEnemy">Cannot find enemy. Do you want to search again?</string>
+    <string name="again">Yes</string>
+    <string name="cancel">No</string>
+    <string name="networkError">Connection lost.</string>
+    
     <string name="about">About</string>
     <string name="aboutContent">
-	    Five Stones v2.1.1
+	    Five Stones v2.2
 	    \n\n
 	    Players put their signs in an empty square by turns.
 	    The goal is to collect five signs in an unbroken row

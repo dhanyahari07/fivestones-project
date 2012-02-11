@@ -12,7 +12,7 @@
     <!-- multi dialog -->
     <string name="multiTitle">Két játékos mód</string>
     <string name="multiBT">Bluetooth</string>
-    <string name="multiInternet">Internet</string>
+    <string name="multiInternet">Internet (beta)</string>
     <string name="multiTwoPlayer">Egy készülék</string>
 
     <!-- options menu -->
@@ -78,11 +78,21 @@
     <string name="BTconnReq">Egy másik játékos szeretne játszani veled.</string>
     <string name="BTconnReqAccept">Elfogad</string>
     <string name="BTconnReqDeny">Elutasít</string>
-    <string name="BTcannotConnect">Nem sikerült kapcsolódni a kiválasztott eszközhöz.</string>
+    <string name="BTcannotConnect">Nem sikerült kapcsolódni a kiválasztott eszközhöz.</string>    
+    
+    <!-- internet -->
+    <string name="connect">Ellenfél keresése...</string>
+    <string name="begin">Te kezdesz</string>
+    <string name="exitQuestion">Biztosan kilépsz?</string>
+    <string name="opponentStart">Az ellenfél kezd</string>
+    <string name="noEnemy">Nem sikerült ellenfelet találni.</string>
+    <string name="again">Ismét</string>
+    <string name="cancel">Kilépés</string>
+    <string name="networkError">A kapcsolat megszakadt.</string>
     
     <string name="about">Névjegy</string>
     <string name="aboutContent">
-	    Amőba v2.1.1
+	    Amőba v2.2
 	    \n\n
 	    A játékosok felváltva rajzolnak egy kört vagy
 	    egy x-et az üres négyzetek valamelyikébe. Az a 
