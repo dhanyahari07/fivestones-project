@@ -2,11 +2,14 @@ package org.me.five_stones_project.activity;
 
 import java.util.Locale;
 
+import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Languages;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  *
@@ -14,7 +17,7 @@ import android.content.res.Configuration;
  */
 
 public class BaseActivity extends Activity {
-	private final static String LANGUAGE_KEY = "language";
+	private static final String LANGUAGE_KEY = "language";
 	private static final int DEFAULT_LANGUAGE = Languages.Undefined.ordinal();
 	
 	protected static int lastAction;
@@ -25,6 +28,11 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 			
 		changeLanguage();
+		
+		if(GameOptions.getInstance().isFullScreen()) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		}
 	}
 	
 	@Override

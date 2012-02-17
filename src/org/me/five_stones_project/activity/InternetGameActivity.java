@@ -12,7 +12,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -24,30 +26,55 @@ import android.widget.Toast;
 public class InternetGameActivity extends GameActivity implements PendingListener {
 	private String id;
 	private ProgressDialog dialog;
+	private PendingThread pending;
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		try {
-			id = WebService.executeRequest("/gamec/connect", null);
-			startDiscover();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Toast.makeText(InternetGameActivity.this, 
-					R.string.networkError, 3000);
-			finish();
-		}
+		new AsyncTask<Void, Void, Boolean>() {
+			
+			@Override
+			protected void onPreExecute() {
+				createDialog(R.string.connect);
+			};
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				try {
+					id = WebService.executeRequest("/gamec/connect", null);
+					return true;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if(result) {
+					dialog.dismiss();					
+					startDiscover();
+				}
+				else {
+					dialog.dismiss();
+					Toast.makeText(InternetGameActivity.this, 
+							R.string.networkError, 3000).show();
+					finish();
+				}
+			};
+		}.execute(new Void[] { });
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
+		if(enemy != null)
+			((InternetEnemy)enemy).close();
 		try {
 			WebService.executeRequest("/gamec/disconnect", 
-				MapFactory.createMap(new String[] { "id" }, new String[] { id }));
-			((InternetEnemy)enemy).close();
+				MapFactory.createMap(new String[] { "id", "app" }, new String[] { id, "0" }));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -61,7 +88,9 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 			    .setPositiveButton(R.string.yes, new OnClickListener() {
 					
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(DialogInterface idialog, int which) {						
+						if(pending != null)
+							pending.terminate();
 						dialog.dismiss();
 						finish();
 					}
@@ -75,7 +104,7 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 	public void startDiscover() {
 		try {
 			boolean start = Boolean.parseBoolean(WebService.executeRequest("/gamec/bind", 
-				MapFactory.createMap(new String[] { "id" }, new String[] { id })));
+				MapFactory.createMap(new String[] { "id", "app" }, new String[] { id, "0" })));
 			
 			if(start) {
 				enemy = new InternetEnemy(this);
@@ -88,9 +117,9 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 					handler.setLastStep(new Point(-1, -1), Players.X);
 			}
 			else {				
-				dialog = ProgressDialog.show(this, "", 
-						getResources().getString(R.string.connect), true);
-				new PendingThread("/gamec/getenemy", id, 1000, this).start();
+				createDialog(R.string.enemys);
+				pending = new PendingThread("/gamec/getenemy", id, 1000, this);
+				pending.start();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,7 +155,6 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 			@Override
 			public void run() {
 				dialog.dismiss();
-
 				new AlertDialog.Builder(InternetGameActivity.this)
 					.setMessage(R.string.noEnemy)
 					.setPositiveButton(R.string.again, new OnClickListener() {
@@ -154,10 +182,40 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 		handler.reinitilize();
 		view.reinitilize();
 		
-		startDiscover();
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				return null;
+			}
+			
+			protected void onPostExecute(Void result) {
+				startDiscover();
+			}
+		}.execute(new Void[] { });
 	}
 	
 	public String getId() {
 		return id;
+	}
+	
+	private void createDialog(int text) {
+		dialog = ProgressDialog.show(this, "", 
+				getResources().getString(text), true);
+		dialog.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(DialogInterface paramDialogInterface, int paramInt,
+					KeyEvent paramKeyEvent) {
+				if(paramInt == KeyEvent.KEYCODE_BACK) {
+					dialog.dismiss();
+					if(pending != null)
+						pending.terminate();
+					finish();
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 }

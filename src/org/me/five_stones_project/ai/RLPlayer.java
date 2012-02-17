@@ -2,17 +2,12 @@ package org.me.five_stones_project.ai;
 
 import java.util.ArrayList;
 
-import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.game.GameHandler;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Descriptions;
 import org.me.five_stones_project.type.Players;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.util.Log;
 import android.util.Pair;
 
 /**
@@ -22,24 +17,28 @@ import android.util.Pair;
  */
 
 public class RLPlayer extends AndroidEnemy {
-	private static final int FI_LENGTH = 16;
-	private static final float[] DEFAULT_TETAS = new float[] {
-		-0.121059686f, -0.082883164f, -0.039765455f, -0.16637056f, 
-		-0.12305969f, -0.09523758f, -0.13617685f, -0.48178604f, 
-		-0.11905968f, -0.08847007f, -0.0012132514f, 0.15f, 
-		-0.11705968f, -0.08587187f, 0.1f, 0.3f
+	public static final int FI_LENGTH = 16;
+	private static final float[] DEFAULT_TETAS = new float[] {		
+		-0.001f, -0.006f, -0.08f, -0.18f,
+		-0.003f, -0.01f, -0.1f, -0.3f,
+		0.001f, 0.006f, 0.08f, 0.18f,
+		0.003f, 0.01f, 0.1f, 0.3f
 	};
 
+	private float MAX = 1;
 	private int minimaxDepth;
-	private float[] tetas = new float[FI_LENGTH];
-	private float alfa, beta, MAX = 1, attack = 1.2f;
 	
 	private State lastState;
+	private float[] updatedFi;
 	private Descriptions level;
+	private FiCalculator calculator;
 	private TDLearner androidLearner;
 
 	public RLPlayer() {
+		calculator = new FiCalculator();
 		androidLearner = new TDLearner(FI_LENGTH);
+		androidLearner.setTetas(DEFAULT_TETAS);
+		
 		level = GameOptions.getInstance().getCurrentLevel();
 		
 		if(level == Descriptions.Normal) {
@@ -47,12 +46,11 @@ public class RLPlayer extends AndroidEnemy {
 		}
 		else if(level == Descriptions.Hard) {
 			minimaxDepth = 4;
+			
 		}
 		else if(level == Descriptions.VeryHard) {
 			minimaxDepth = 6;
 		}
-		
-		load();
 	}
 	
 	@Override
@@ -77,312 +75,20 @@ public class RLPlayer extends AndroidEnemy {
 		}
 		
 		super.showEndDialog(handler);
-		
-		String a = "";
-		for(int i = 0; i < androidLearner.getTetas().length; ++i)
-			a += androidLearner.getTetas()[i] + "_";
-		Log.i("tag", a);
 	}
 	
 	@Override
 	public void updateState(GameHandler handler) {		
 		float reward = -0.04f;		
 		if(handler.getLastStepPlayer() == human) {
-			lastState = new State(calcFi(handler.signs), androidLearner.getTetas(), reward);
+			lastState = new State(updatedFi = calculator.calcFi(handler.signs, android, human), 
+					androidLearner.getTetas(), reward);
 			androidLearner.addState(lastState);
 		}
 	}
 	
 	@Override
-	protected void finish() {
-		save();
-	}
-	
-	private float[] calcFi(int[][] board) {
-		float[] humanOpenedOne = new float[7];
-		float[] humanOpenedTwo = new float[7];
-		float[] androidOpenedOne = new float[7];
-		float[] androidOpenedTwo = new float[7];
-		
-		int humanCount = -1, androidCount = -1;
-		boolean humanClosed = true,	androidClosed = true;
-		//horizontal
-		for(int j = 0; j < board[0].length; ++j) {
-			for(int i = 0; i < board.length; ++i) {
-				if(board[i][j] == android.ordinal()) {
-					if(i - 1 >= 0) {
-						if(board[i - 1][j] == Players.None.ordinal()) {
-							androidClosed = false;
-							androidCount = 0;
-						}
-						else if(board[i - 1][j] == android.ordinal()) {
-							androidCount++;
-						}
-						else if(board[i - 1][j] == human.ordinal()) {
-							if(!humanClosed)
-								humanOpenedOne[humanCount]++;
-							androidClosed = true;
-							androidCount = 0;
-						}
-					}
-					else
-						androidCount = 0;
-				}
-				else if(board[i][j] == human.ordinal()) {
-					if(i - 1 >= 0) {
-						if(board[i - 1][j] == Players.None.ordinal()) {
-							humanClosed = false;
-							humanCount = 0;
-						}
-						else if(board[i - 1][j] == human.ordinal()) {
-							humanCount++;
-						}
-						else if(board[i - 1][j] == android.ordinal()) {
-							if(!androidClosed)
-								androidOpenedOne[androidCount]++;
-							humanClosed = true;
-							humanCount = 0;
-						}
-					}
-					else {
-						humanCount = 0;
-					}
-				}
-				else if(board[i][j] == Players.None.ordinal() && i - 1 >= 0) {
-					if(board[i - 1][j] == android.ordinal()) {
-						if(androidClosed)
-							androidOpenedOne[androidCount]++;
-						else
-							androidOpenedTwo[androidCount]++;
-					}
-					else if(board[i - 1][j] == human.ordinal()) {
-						if(humanClosed)
-							humanOpenedOne[humanCount]++;
-						else
-							humanOpenedTwo[humanCount]++;
-					}
-				}
-			}
-			humanCount = -1;
-			androidCount = -1;
-			humanClosed = true;
-			androidClosed = true;
-		}
-		
-		//vertical
-		for(int i = 0; i < board.length; ++i) {
-			for(int j = 0; j < board[0].length; ++j) {
-				if(board[i][j] == android.ordinal()) {
-					if(j - 1 >= 0) {
-						if(board[i][j - 1] == Players.None.ordinal()) {
-							androidClosed = false;
-							androidCount = 0;
-						}
-						else if(board[i][j - 1] == android.ordinal()) {
-							androidCount++;
-						}
-						else if(board[i][j - 1] == human.ordinal()) {
-							if(!humanClosed)
-								humanOpenedOne[humanCount]++;
-							androidClosed = true;
-							androidCount = 0;
-						}
-					}
-					else
-						androidCount = 0;
-				}
-				else if(board[i][j] == human.ordinal()) {
-					if(j - 1 >= 0) {
-						if(board[i][j - 1] == Players.None.ordinal()) {
-							humanClosed = false;
-							humanCount = 0;
-						}
-						else if(board[i][j - 1] == human.ordinal()) {
-							humanCount++;
-						}
-						else if(board[i][j - 1] == android.ordinal()) {
-							if(!androidClosed)
-								androidOpenedOne[androidCount]++;
-							humanClosed = true;
-							humanCount = 0;
-						}
-					}
-					else {
-						humanCount = 0;
-					}
-				}
-				else if(board[i][j] == Players.None.ordinal() && j - 1 >= 0) {
-					if(board[i][j - 1] == android.ordinal()) {
-						if(androidClosed)
-							androidOpenedOne[androidCount]++;
-						else
-							androidOpenedTwo[androidCount]++;
-					}
-					else if(board[i][j - 1] == human.ordinal()) {
-						if(humanClosed)
-							humanOpenedOne[humanCount]++;
-						else
-							humanOpenedTwo[humanCount]++;
-					}
-				}
-			}
-			humanCount = -1;
-			androidCount = -1;
-			humanClosed = true;
-			androidClosed = true;
-		}
-		
-		//diagonal '/'
-		for(int s = 0; s < board.length + board[0].length - 1; ++s) {
-			int from = Math.max(0, s - board[0].length + 1);
-			int to = Math.min(board.length - 1, s);
-			
-			for(int c = from; c <= to ; ++c) {
-				if(board[c][s - c] == android.ordinal()) {
-					if(c - 1 >= 0 && s - c + 1 < board[0].length) {
-						if(board[c - 1][s - c + 1] == Players.None.ordinal()) {
-							androidClosed = false;
-							androidCount = 0;
-						}
-						else if(board[c - 1][s - c + 1] == android.ordinal()) {
-							androidCount++;
-						}
-						else if(board[c - 1][s - c + 1] == human.ordinal()) {
-							if(!humanClosed)
-								humanOpenedOne[humanCount]++;
-							androidClosed = true;
-							androidCount = 0;
-						}
-					}
-					else
-						androidCount = 0;
-				}
-				else if(board[c][s - c] == human.ordinal()) {
-					if(c - 1 >= 0 && s - c + 1 < board[0].length) {
-						if(board[c - 1][s - c + 1] == Players.None.ordinal()) {
-							humanClosed = false;
-							humanCount = 0;
-						}
-						else if(board[c - 1][s - c + 1] == human.ordinal()) {
-							humanCount++;
-						}
-						else if(board[c - 1][s - c + 1] == android.ordinal()) {
-							if(!androidClosed)
-								androidOpenedOne[androidCount]++;
-							humanClosed = true;
-							humanCount = 0;
-						}
-					}
-					else {
-						humanCount = 0;
-					}
-				}
-				else if(board[c][s - c] == Players.None.ordinal() && c - 1 >= 0 && s - c + 1 < board[0].length) {
-					if(board[c - 1][s - c + 1] == android.ordinal()) {
-						if(androidClosed)
-							androidOpenedOne[androidCount]++;
-						else
-							androidOpenedTwo[androidCount]++;
-					}
-					else if(board[c - 1][s - c + 1] == human.ordinal()) {
-						if(humanClosed)
-							humanOpenedOne[humanCount]++;
-						else
-							humanOpenedTwo[humanCount]++;
-					}
-				}
-			}
-			
-			humanCount = -1;
-			androidCount = -1;
-			humanClosed = true;
-			androidClosed = true;
-		}
-		
-		//diagonal '\'
-		for(int s = 0; s < board.length + board[0].length - 1; ++s) {
-			int from = Math.max(0, s - board[0].length + 1);
-			int to = Math.min(board.length - 1, s);
-			for(int c = to; c >= from; --c) {
-				int d = board.length - 1 - c;
-				if(board[d][s - c] == android.ordinal()) {
-					if(d - 1 >= 0 && s - c - 1 >= 0) {
-						if(board[d - 1][s - c - 1] == Players.None.ordinal()) {
-							androidClosed = false;
-							androidCount = 0;
-						}
-						else if(board[d - 1][s - c - 1] == android.ordinal()) {
-							androidCount++;
-						}
-						else if(board[d - 1][s - c - 1] == human.ordinal()) {
-							if(!humanClosed)
-								humanOpenedOne[humanCount]++;
-							androidClosed = true;
-							androidCount = 0;
-						}
-					}
-					else
-						androidCount = 0;
-				}
-				else if(board[d][s - c] == human.ordinal()) {
-					if(d - 1 >= 0 && s - c - 1 >= 0) {
-						if(board[d - 1][s - c - 1] == Players.None.ordinal()) {
-							humanClosed = false;
-							humanCount = 0;
-						}
-						else if(board[d - 1][s - c - 1] == human.ordinal()) {
-							humanCount++;
-						}
-						else if(board[d - 1][s - c - 1] == android.ordinal()) {
-							if(!androidClosed)
-								androidOpenedOne[androidCount]++;
-							humanClosed = true;
-							humanCount = 0;
-						}
-					}
-					else {
-						humanCount = 0;
-					}
-				}
-				else if(board[d][s - c] == Players.None.ordinal() && d - 1 >= 0 && s - c - 1 >= 0) {
-					if(board[d - 1][s - c - 1] == android.ordinal()) {
-						if(androidClosed)
-							androidOpenedOne[androidCount]++;
-						else
-							androidOpenedTwo[androidCount]++;
-					}
-					else if(board[d - 1][s - c - 1] == human.ordinal()) {
-						if(humanClosed)
-							humanOpenedOne[humanCount]++;
-						else
-							humanOpenedTwo[humanCount]++;
-					}
-				}
-			}
-			
-			humanCount = -1;
-			androidCount = -1;
-			humanClosed = true;
-			androidClosed = true;
-		}
-		
-		float[] fi = new float[FI_LENGTH];
-		System.arraycopy(humanOpenedOne, 0, fi, 0, 4);
-		System.arraycopy(humanOpenedTwo, 0, fi, 4, 4);
-		System.arraycopy(androidOpenedOne, 0, fi, 8, 4);
-		System.arraycopy(androidOpenedTwo, 0, fi, 12, 4);		
-		
-		return modifyFi(fi);
-	}
-	
-	private float[] modifyFi(float[] fi) {
-		float[] nfi = new float[fi.length];
-		
-		for(int i = 0; i < fi.length; ++i)
-			nfi[i] = fi[i] == 0 ? 0 : 1;
-		
-		return nfi;
-	}
+	protected void finish() { }
 	
 	@Override
 	protected Point findBestStep(GameHandler handler) {
@@ -417,15 +123,17 @@ public class RLPlayer extends AndroidEnemy {
 		}
 
 		Point best = new Point();
-		alfa = Float.NEGATIVE_INFINITY;
-		beta = Float.POSITIVE_INFINITY;
+		float alfa = Float.NEGATIVE_INFINITY;
+		float beta = Float.POSITIVE_INFINITY;
 		float maxU = Float.NEGATIVE_INFINITY;
 		
 		for(Point point : relevantSpaces) {	
 			copy[point.x][point.y] = android.ordinal();
 			
+			float[] nfi = calculator.modifyFi(updatedFi, 
+				calculator.calcDeltaFi(copy, point, android, android, human));
 			float minU = minSearch(copy, updateRelevantSpaces(
-					copy, relevantSpaces, point, 1), minimaxDepth, 0);
+					copy, relevantSpaces, point, 1), minimaxDepth, 0, alfa, beta, nfi);
 			
 			if(minU > maxU) {
 				maxU = minU;
@@ -438,8 +146,8 @@ public class RLPlayer extends AndroidEnemy {
 		return best;
 	}
 
-	private float maxSearch(int[][] board, 
-			ArrayList<Point> relevantSpaces, int maxDepth, int currentDepth) {		
+	private float maxSearch(int[][] board, ArrayList<Point> relevantSpaces, 
+			int maxDepth, int currentDepth, float alfa, float beta, float[] fi) {		
 		for(Point p : relevantSpaces) {
 			board[p.x][p.y] = android.ordinal();
 			Pair<Point, Point> five = PatternCounter.searchForFive(board, p, android.getShift());
@@ -454,14 +162,15 @@ public class RLPlayer extends AndroidEnemy {
 			board[space.x][space.y] = android.ordinal();
 								
 			float minU;
+			float[] nfi = calculator.modifyFi(fi, calculator.calcDeltaFi(board, space, android, android, human));
 			if(maxDepth > currentDepth)
 				minU = minSearch(board,	updateRelevantSpaces(board, 
-					relevantSpaces, space, 1), maxDepth, ++currentDepth);
+					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
 			else
-				minU = attack * State.calculateUtility(calcFi(board), androidLearner.getTetas());
-						
+				minU = State.calculateUtility(nfi,	androidLearner.getTetas());
+			
 			board[space.x][space.y] = Players.None.ordinal();
-
+			
 			if(minU >= beta)
 				return minU;
 			
@@ -473,8 +182,8 @@ public class RLPlayer extends AndroidEnemy {
 		return maxU;
 	}
 	
-	private float minSearch(int[][] board, 
-			ArrayList<Point> relevantSpaces, int maxDepth, int currentDepth) {		
+	private float minSearch(int[][] board, ArrayList<Point> relevantSpaces, 
+			int maxDepth, int currentDepth, float alfa, float beta, float[] fi) {		
 		for(Point p : relevantSpaces) {
 			board[p.x][p.y] = human.ordinal();
 			Pair<Point, Point> five = PatternCounter.searchForFive(board, p, human.getShift());
@@ -489,14 +198,15 @@ public class RLPlayer extends AndroidEnemy {
 			board[space.x][space.y] = human.ordinal();
 
 			float maxU;
+			float[] nfi = calculator.modifyFi(fi, calculator.calcDeltaFi(board, space, human, android, human));
 			if(maxDepth > currentDepth)
 				maxU = maxSearch(board, updateRelevantSpaces(board, 
-					relevantSpaces, space, 1), maxDepth, ++currentDepth);
+					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
 			else
-				maxU = State.calculateUtility(calcFi(board), androidLearner.getTetas());
+				maxU = State.calculateUtility(nfi, androidLearner.getTetas());
 			
 			board[space.x][space.y] = Players.None.ordinal();
-						
+			
 			if(maxU <= alfa)
 				return maxU;
 			
@@ -530,30 +240,5 @@ public class RLPlayer extends AndroidEnemy {
 					newSpaces.add(newPoint);
 			}
 		return newSpaces;
-	}
-	
-	private final String TETA = "teta_";
-	private void save() {
-		Context currentContext = GameActivity.getInstance();
-		SharedPreferences.Editor ed = currentContext.getSharedPreferences(
-				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
-		
-		for(int i = 0; i < tetas.length; ++i)
-			ed.putFloat(TETA + Integer.toString(i), androidLearner.getTetas()[i]);
-		
-		ed.commit();
-	}
-	
-	private void load() {
-		float[] teta = new float[tetas.length];
-		
-		Context currentContext = GameActivity.getInstance();
-		SharedPreferences sp = currentContext.getSharedPreferences(
-				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
-		
-		for(int i = 0; i < tetas.length; ++i)
-			teta[i] = sp.getFloat(TETA + Integer.toString(i), DEFAULT_TETAS[i]);
-		
-		androidLearner.setTetas(teta);
 	}
 }

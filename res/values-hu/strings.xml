@@ -12,7 +12,7 @@
     <!-- multi dialog -->
     <string name="multiTitle">Két játékos mód</string>
     <string name="multiBT">Bluetooth</string>
-    <string name="multiInternet">Internet (beta)</string>
+    <string name="multiInternet">Internet</string>
     <string name="multiTwoPlayer">Egy készülék</string>
 
     <!-- options menu -->
@@ -23,6 +23,9 @@
     <string name="quality">Grafika minősége</string>
     <string name="lowq">Alacsony</string>
     <string name="highq">Magas</string>
+    <string name="vibration">Rezgés</string>
+    <string name="animation">Animáció</string>
+    <string name="fullscreen">Teljes képernyő</string>
     
     <!-- levels -->
     <string name="levelDialog">Nehézségi szint</string>
@@ -41,13 +44,18 @@
     <string name="classic">Hagyományos</string>
     <string name="gomoku">Gomoku</string>
     <string name="modern">Modern</string>
+    
+    <string name="_none">None</string>
+    <string name="_style">Style</string>
+    <string name="_level">Level</string>
+    <string name="_quality">Quality</string>
    
-   <!-- High score View -->
-   <string name="hlevel">Szint:\t</string>
-   <string name="hwins">Győzelmek:\t</string>
-   <string name="hloses">Vereségek:\t</string>
-   <string name="hbest">Legjobb idő:\t</string>
-   <string name="hdate">Dátum:\t</string>
+    <!-- High score View -->
+    <string name="hlevel">Szint:\t</string>
+    <string name="hwins">Győzelmek:\t</string>
+    <string name="hloses">Vereségek:\t</string>
+    <string name="hbest">Legjobb idő:\t</string>
+    <string name="hdate">Dátum:\t</string>
     <string name="hback">Vissza</string>
     
     <!-- restart dialog -->
@@ -81,7 +89,8 @@
     <string name="BTcannotConnect">Nem sikerült kapcsolódni a kiválasztott eszközhöz.</string>    
     
     <!-- internet -->
-    <string name="connect">Ellenfél keresése...</string>
+    <string name="connect">Kapcsolódás</string>
+    <string name="enemys">Ellenfél keresése...</string>
     <string name="begin">Te kezdesz</string>
     <string name="exitQuestion">Biztosan kilépsz?</string>
     <string name="opponentStart">Az ellenfél kezd</string>
@@ -89,10 +98,11 @@
     <string name="again">Ismét</string>
     <string name="cancel">Kilépés</string>
     <string name="networkError">A kapcsolat megszakadt.</string>
+    <string name="finish">A kapcsolat megszakadt. Új játék?</string>
     
     <string name="about">Névjegy</string>
     <string name="aboutContent">
-	    Amőba v2.2
+	    Amőba v2.2.3
 	    \n\n
 	    A játékosok felváltva rajzolnak egy kört vagy
 	    egy x-et az üres négyzetek valamelyikébe. Az a 

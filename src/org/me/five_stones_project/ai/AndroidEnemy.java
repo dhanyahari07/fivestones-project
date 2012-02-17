@@ -4,6 +4,7 @@ import org.me.five_stones_project.IEnemy;
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.game.GameHandler;
+import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Players;
 
 import android.app.AlertDialog;
@@ -122,7 +123,7 @@ public abstract class AndroidEnemy implements IEnemy {
 		protected void onPostExecute(Point result) {
 			super.onPostExecute(result);
 			
-			handler.enemyStep(result, true);
+			handler.enemyStep(result, GameOptions.getInstance().isAnimation());
 		}
 	}
 }

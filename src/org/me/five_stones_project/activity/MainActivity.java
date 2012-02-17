@@ -43,10 +43,10 @@ public class MainActivity extends BaseActivity {
 	private ViewFlipper flipper;
 	
 	@Override
-	protected void onCreate(android.os.Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+	protected void onCreate(android.os.Bundle savedInstanceState) {		
 		GameOptions.initialize(this);
+		
+		super.onCreate(savedInstanceState);
 		
         /*
          * first start
