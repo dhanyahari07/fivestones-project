@@ -40,6 +40,17 @@
 	               android:layout_gravity="center_vertical"
 	               android:paddingRight="15dp"/>
 	   </TableRow>
+	   <TableRow android:background="#222222">
+	       <TextView android:layout_width="fill_parent"
+	                 android:layout_height="1dp"/>
+	   </TableRow>
+	   <ListView android:id="@+options/listOther"
+	             android:divider="#222222"
+	             android:dividerHeight="1dp"
+	             android:textColor="#fff"
+	             android:background="#000"
+	             android:layout_height="195dp"
+	             android:layout_width="fill_parent"/>
 	   <TableRow android:background="#444444">
 	      <TextView android:id="@+options/quality"
 	                android:layout_height="wrap_content"

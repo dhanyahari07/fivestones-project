@@ -6,11 +6,14 @@ import org.me.five_stones_project.activity.InternetGameActivity;
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.common.MapFactory;
 import org.me.five_stones_project.game.GameHandler;
+import org.me.five_stones_project.game.GameOptions;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 /**
@@ -79,7 +82,7 @@ public class InternetEnemy implements IEnemy, PendingListener {
 	    		
 				@Override
 				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-					instance.reinitilize();					
+					instance.reinitilize();
 				}
 			})
 			.setNegativeButton(R.string.no, new OnClickListener() {
@@ -104,10 +107,11 @@ public class InternetEnemy implements IEnemy, PendingListener {
 	public void updateState(GameHandler handler) {		
 		try {
 			WebService.executeRequest("/gamep/move", MapFactory.createMap(
-				new String[] { "id", "x", "y"}, 
+				new String[] { "id", "x", "y", "grow"}, 
 				new String[] { activity.getId(), 
 					Integer.toString(handler.getLastStep().x), 
-					Integer.toString(handler.getLastStep().y) }));
+					Integer.toString(handler.getLastStep().y),
+					Integer.toString(handler.grow.x * 10 + handler.grow.y)}));
 		} catch (Exception e) {
 			e.printStackTrace();
 			exit();
@@ -117,12 +121,50 @@ public class InternetEnemy implements IEnemy, PendingListener {
 	@Override
 	public void onSuccess(String result) {
 		if(result.equals("destroy")) {
-			exit();
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					new AlertDialog.Builder(activity)
+					.setMessage(R.string.noEnemy)
+					.setPositiveButton(R.string.finish, new OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+							activity.reinitilize();					
+						}
+					})
+					.setNegativeButton(R.string.cancel, new OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+							activity.finish();					
+						}
+					}).show();
+				}
+			});
+			try {
+				WebService.executeRequest("/gamep/finish", MapFactory.createMap(
+					new String[] { "id" }, new String[] { activity.getId() }));
+			} catch (Exception e) {
+				e.printStackTrace();
+				exit();
+			}
 		}
 		else {
+			Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+			
+			String[] res = result.split("_");
+			
+			if(res.length == 3) {
+				int grow = Integer.parseInt(res[2]);
+				int t = grow / 10;
+				handler.grow.set(t, grow - t * 10);
+			}
 			handler.enemyStep(new Point(
-				Integer.parseInt(result.split("_")[0]), 
-				Integer.parseInt(result.split("_")[1])), true);
+				Integer.parseInt(res[0]), 
+				Integer.parseInt(res[1])), GameOptions.getInstance().isAnimation());
 		}
 	}
 
@@ -132,12 +174,19 @@ public class InternetEnemy implements IEnemy, PendingListener {
 	}
 	
 	public void close() {
-		pending.terminate();
+		if(pending != null)
+			pending.terminate();
 	}
 	
 	public void exit() {
-		showToast(R.string.networkError);
-		activity.finish();
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				showToast(R.string.networkError);
+				activity.finish();
+			}
+		});
 	}
 	
 	public void showToast(final int text) {

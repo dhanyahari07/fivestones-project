@@ -7,12 +7,15 @@ import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.common.Message;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.game.GameHandler;
+import org.me.five_stones_project.game.GameOptions;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
 import android.os.Handler;
+import android.os.Vibrator;
 
 /**
  *
@@ -37,6 +40,7 @@ public class BluetoothEnemy implements IEnemy {
 	}
 	
 	public void processMessage(Message msg) {
+		processor.grow = new Point(msg.getGrow().x, msg.getGrow().y);
 		processor.point = new Point(msg.getPoint().x, msg.getPoint().y);
 		osHandler.post(processor);
 	}
@@ -81,7 +85,7 @@ public class BluetoothEnemy implements IEnemy {
 
 	@Override
 	public void updateState(GameHandler handler) {
-		thread.write(new Message(handler.getLastStep()));
+		thread.write(new Message(handler.getLastStep(), handler.grow));
 	}
 	
 	public void close() {
@@ -89,16 +93,22 @@ public class BluetoothEnemy implements IEnemy {
 	}
 	
 	private class MessageProcessor implements Runnable {
+		public Point grow;
 		public Point point;
 		
 		public MessageProcessor() {
+			grow = new Point();
 			point = new Point();
 		}
 		
 		@Override
 		public void run() {
 			if(handler != null) {
-				handler.enemyStep(point, true);
+				Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+				v.vibrate(300);
+				
+				handler.grow.set(grow.x, grow.y);
+				handler.enemyStep(point, GameOptions.getInstance().isAnimation());
 				handler = null;
 			}
 			else

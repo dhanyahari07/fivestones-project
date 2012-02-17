@@ -23,7 +23,9 @@ public class PendingThread extends Thread {
 	}
 	
 	public void terminate() {
-		running = false;
+		synchronized (this) {
+			running = false;			
+		}
 	}
 
 	@Override
@@ -33,17 +35,19 @@ public class PendingThread extends Thread {
 		boolean ok = false;
 		while(!result.equals("timeout")) {
 			try {				
-				if(!running) 
-					return;
-				
 				if(!result.equals("")) {
 					ok = true;
 					break;
 				}
 				
-				result = WebService.executeRequest(url, 
-					MapFactory.createMap(new String[] { "id", "attempt"}, 
-					new String[] { id, Integer.toString(attempts++) }));
+				synchronized (this) {
+					if(running)
+						result = WebService.executeRequest(url,
+							MapFactory.createMap(new String[] { "id", "attempt"},
+							new String[] { id, Integer.toString(attempts++) }));
+					else
+						return;
+				}
 								
 				Thread.sleep(timeout);
 			} catch (Exception e) {

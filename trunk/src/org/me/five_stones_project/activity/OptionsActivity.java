@@ -22,6 +22,7 @@ import android.widget.SeekBar;
  */
 
 public class OptionsActivity extends BaseActivity {
+	private ListView list;
 	private SeekBar sensitivity;
 	private Languages selectedLanguage;
 	private Descriptions selectedStyle, selectedQuality; 
@@ -38,6 +39,25 @@ public class OptionsActivity extends BaseActivity {
 
 		sensitivity = (SeekBar) findViewById(R.options.seekbarsens);
 		sensitivity.setProgress(instance.getSensitivity());
+		
+		/*
+		 * create other list
+		 */
+		final String[] descriptions = new String[] { 
+				getResources().getString(R.string.animation),
+				getResources().getString(R.string.vibration),
+				getResources().getString(R.string.fullscreen)};
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_multiple_choice, descriptions);
+
+		list = (ListView) findViewById(R.options.listOther);
+		list.setAdapter(adapter);
+		list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
+		list.setItemChecked(0, GameOptions.getInstance().isAnimation());
+		list.setItemChecked(1, GameOptions.getInstance().isVibration());
+		list.setItemChecked(2, GameOptions.getInstance().isFullScreen());
 		
 		/*
 		 * create quality list
@@ -117,11 +137,9 @@ public class OptionsActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int key, KeyEvent event) {
 		if (key == KeyEvent.KEYCODE_BACK) {
-        	saveChanges();
         	
-        	if(!selectedLanguage.equals(currentLanguage))
-        		//updateLanguage(selectedLanguage);
-        		//MainActivity.restartApplication();
+        	if(!selectedLanguage.equals(currentLanguage) || 
+        			GameOptions.getInstance().isFullScreen() != list.isItemChecked(2))
         		new AlertDialog.Builder(this)
         			.setPositiveButton(R.string.restartPos, new OnClickListener() {
 						
@@ -129,6 +147,8 @@ public class OptionsActivity extends BaseActivity {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 			        		updateLanguage(selectedLanguage);
+			        		GameOptions.getInstance().setFullScreen(list.isItemChecked(2));
+			            	saveChanges();
 
 			        		finish();
 						}
@@ -138,14 +158,17 @@ public class OptionsActivity extends BaseActivity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
+			            	saveChanges();
 							finish();
 						}
 					})
         			.setTitle(R.string.restartTitle)
         			.setMessage(R.string.restartMsg)
         			.show(); 
-        	else
+        	else {
+        		saveChanges();
         		finish();
+        	}
             		
 			return true;
 		} else if (key == KeyEvent.KEYCODE_HOME)
@@ -159,6 +182,9 @@ public class OptionsActivity extends BaseActivity {
 		instance.setSensitivity(sensitivity.getProgress());
 		instance.setCurrentStyle(selectedStyle);
 		instance.setCurrentQuality(selectedQuality);
+		
+		instance.setAnimation(list.isItemChecked(0));
+		instance.setVibration(list.isItemChecked(1));
 		
 		instance.commit(this);
 	}

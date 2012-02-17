@@ -3,13 +3,16 @@ package org.me.five_stones_project.activity;
 import org.me.five_stones_project.R;
 import org.me.five_stones_project.bluetooth.BluetoothEnemy;
 import org.me.five_stones_project.common.Properties;
+import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Players;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 
 /**
@@ -58,8 +61,12 @@ public class BluetoothGameActivity extends GameActivity {
 	}
 	
 	public void firstStep(Point point) {
-		if(handler.getLastStepPlayer() == Players.None)
-			handler.enemyStep(point, true);
+		if(handler.getLastStepPlayer() == Players.None) {
+			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+			
+			handler.enemyStep(point, GameOptions.getInstance().isAnimation());
+		}
 	}
 	
 	@Override

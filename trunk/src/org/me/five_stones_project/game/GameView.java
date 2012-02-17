@@ -5,11 +5,13 @@ import org.me.five_stones_project.R;
 import org.me.five_stones_project.type.Descriptions;
 import org.me.five_stones_project.type.Players;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -18,6 +20,7 @@ import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.os.Handler;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -38,11 +41,13 @@ public class GameView extends View {
 	
 	private Bitmap board;
 	private Display display;
+	//height of the statusbar and the titlebar together
+	private int tsBarHeight;
 	private int qualityModifier;
 	private int cellSize, minCellSize;
 	private int[] cellPixels, cellXPixels, cellOPixels;
 
-	public GameView(Context context, GameHandler handler, AndroidMenu menu) {
+	public GameView(Activity context, GameHandler handler, AndroidMenu menu) {
 		super(context);
 		
 		this.menu = menu;
@@ -50,20 +55,25 @@ public class GameView extends View {
 		
 		qualityModifier = GameOptions.getInstance().getCurrentQuality() == Descriptions.Low ? 2 : 1;
 		
-		display = ((WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		cellSize = BitmapFactory.decodeResource(getResources(), 
 				R.drawable.cell_classic).getWidth() / qualityModifier;
 		
 		openBitmaps();
-		
-		initialize();
 	}
 	
-	private void initialize() {		
-		int width = display.getWidth() / (cellSize * qualityModifier / 2) + 1;
-        int height = display.getHeight() / (cellSize * qualityModifier / 2) + 1;
-        this.handler.signs = new int[width][height];
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		
+		initialize(false);
+	}
+	
+	private void initialize(boolean b) {		
+		int width = getWidth() / (cellSize * qualityModifier / 2) + 1;
+        int height = getHeight() / (cellSize * qualityModifier / 2) + 1;
+        
+        if(handler.signs == null || b)
+        	this.handler.signs = new int[width][height];
         
         mode = 0;
     	originalDistance = 0;
@@ -71,19 +81,23 @@ public class GameView extends View {
     	midPoint = new PointF();
     	matrix = new Matrix();
     	savedMatrix = new Matrix();
-        
+
+    	display = ((WindowManager) getContext()
+            .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+    	tsBarHeight = display.getHeight() - getHeight();
+    	
 		drawBoard();
 		invalidate();
 	}
 	
 	public void reinitilize() {
 		cancelAnimation();		
-		initialize();
+		initialize(true);
 	}
 
 	@Override
-	public void onDraw(Canvas canvas) {		
-		Point padding = new Point();
+	public void onDraw(Canvas canvas) {
+		Rect padding = new Rect();
 		float ratio = calculatePadding(padding);
 		
 		matrix.postTranslate(translate.x, translate.y);		
@@ -91,49 +105,54 @@ public class GameView extends View {
 		PointF delta = new PointF();
 	    float[] mappedPoints = new float[4];
 		matrix.mapPoints(mappedPoints, new float[] {
-			0, 0, display.getWidth(), display.getHeight()});
+			0, 0, canvas.getWidth(), canvas.getHeight()});
 		
 	    if(mappedPoints[0] > 0)
 			delta.x = -mappedPoints[0];
-	    else if(mappedPoints[2] < display.getWidth())
-			delta.x = display.getWidth() - mappedPoints[2];
+	    else if(mappedPoints[2] < canvas.getWidth())
+			delta.x = canvas.getWidth() - mappedPoints[2];
 		if(mappedPoints[1] > 0)
 			delta.y = -mappedPoints[1];
-		else if(mappedPoints[3] < display.getHeight())
-			delta.y = display.getHeight() - mappedPoints[3];
+		else if(mappedPoints[3] < canvas.getHeight())
+			delta.y = canvas.getHeight() - mappedPoints[3];
 		
 		matrix.postTranslate(delta.x, delta.y);
 		
 		super.onDraw(canvas);
-		
+				
 		canvas.save();		
-		canvas.setMatrix(matrix);		
+		canvas.setMatrix(matrix);
 		canvas.drawColor(Color.argb(150, 150, 150, 150));
 		
 		float[] positions = new float[] { 0, 1 };
 		int[] colors = new int[] { 0x00000000, 0x40000000 };
         			
 		Rect src = new Rect(0, 0, board.getWidth(), board.getHeight());
-        Rect dst = new Rect(padding.x, padding.y, 
-        		display.getWidth() - padding.x, display.getHeight() - padding.y);
+        Rect dst = new Rect(padding.left, padding.top, 
+        		canvas.getWidth() - padding.right, canvas.getHeight() - padding.bottom);
 		
         canvas.drawBitmap(board, src, dst, null);
 		
 		// draw the gradient
+        Shader shader;
+        RectF rect = new RectF(0, 0, canvas.getWidth(), canvas.getHeight());
+		Paint paint = new Paint();
+		paint.setDither(true);
+		paint.setAntiAlias(true);
+		paint.setFilterBitmap(true);
+		
         if(!handler.getLastStep().equals(-1, -1) && !isAnimation) {
-        	Shader shader=new RadialGradient(
-                (handler.getLastStep().x * cellSize + cellSize / 2) * ratio + padding.x,
-                (handler.getLastStep().y * cellSize + cellSize / 2) * ratio + padding.y,
-                cellSize, colors, positions, Shader.TileMode.CLAMP);
-        
-			RectF rect = new RectF(0, 0, display.getWidth(), display.getHeight());
-			Paint paint = new Paint();
-			paint.setDither(true);
-			paint.setAntiAlias(true);
-			paint.setFilterBitmap(true);
-			paint.setShader(shader);
-			canvas.drawRect(rect, paint);
+        	shader = new RadialGradient(
+                (handler.getLastStep().x * cellSize + cellSize / 2) * ratio + padding.left,
+                (handler.getLastStep().y * cellSize + cellSize / 2) * ratio + padding.top,
+                cellSize, colors, positions, TileMode.CLAMP);
         }
+        else
+        	shader = new LinearGradient(0, 0, getWidth(), 
+    			getHeight(), colors[1], colors[1], TileMode.CLAMP);
+        	
+		paint.setShader(shader);        
+		canvas.drawRect(rect, paint);
 		
 		if (handler.IsGameEnds() && !isAnimation) {
 			Paint line = new Paint();
@@ -144,10 +163,10 @@ public class GameView extends View {
 			
 			line.setStrokeWidth(2);
 			canvas.drawLine(
-				(handler.stat.start.x * cellSize + cellSize / 2) * ratio + padding.x, 
-				(handler.stat.start.y * cellSize + cellSize / 2) * ratio + padding.y, 
-				(handler.stat.end.x * cellSize + cellSize / 2) * ratio + padding.x, 
-				(handler.stat.end.y * cellSize + cellSize / 2) * ratio + padding.y, line);
+				(handler.stat.start.x * cellSize + cellSize / 2) * ratio + padding.left, 
+				(handler.stat.start.y * cellSize + cellSize / 2) * ratio + padding.top, 
+				(handler.stat.end.x * cellSize + cellSize / 2) * ratio + padding.right, 
+				(handler.stat.end.y * cellSize + cellSize / 2) * ratio + padding.top, line);
 		}
 		
 		canvas.restore();
@@ -197,12 +216,10 @@ public class GameView extends View {
 	                if(scaleFactor < 1) {	                	
 	                	float[] mappedPoints = new float[4];
 	                	matrix.mapPoints(mappedPoints, new float[] {0, 0, 
-	                			display.getWidth(), display.getHeight()});
+	                			getWidth(), getHeight()});
 	                	
-	                	if(mappedPoints[2] - mappedPoints[0] < display.getWidth()) {
-	                		//menu.show();
-	                		
-	            			float scale = display.getWidth() / (mappedPoints[2] - mappedPoints[0]);
+	                	if(mappedPoints[2] - mappedPoints[0] < getWidth()) {
+	            			float scale = getWidth() / (mappedPoints[2] - mappedPoints[0]);
 	            			matrix.postScale(scale, scale, midPoint.x, midPoint.y);
 	            		}
 	                }
@@ -214,7 +231,6 @@ public class GameView extends View {
                 			float scale = cellSize / (mappedPoints[1] - mappedPoints[0]);
 	            			matrix.postScale(scale, scale, midPoint.x, midPoint.y);
                 		}
-	                	//menu.hide();
 	                }
 				}
 				
@@ -235,24 +251,24 @@ public class GameView extends View {
 			if(event.getEventTime() - event.getDownTime() 
 					< GameOptions.getInstance().getSensitivity() * 100) {
 				
-				Point padding = new Point();
+				Rect padding = new Rect();
 				calculatePadding(padding);
 		        float[] mappedPoints = new float[4];
 		    	matrix.mapPoints(mappedPoints, new float[] {
-		    			0, 0, display.getWidth(), display.getHeight()});
-		    	float ratio = (mappedPoints[2] - mappedPoints[0]) / display.getWidth();
+		    			0, 0, getWidth(), getHeight()});
+		    	float ratio = (mappedPoints[2] - mappedPoints[0]) / getWidth();
 		    	
-		    	if((event.getX() - mappedPoints[0]) / ratio < padding.x ||
-	    			(event.getY() - mappedPoints[1]) / ratio < padding.y ||
-	    			(mappedPoints[2] - event.getX()) / ratio < padding.x ||
-	    			(mappedPoints[3] - event.getY()) / ratio < padding.y)
+		    	if((event.getX() - mappedPoints[0]) / ratio < padding.left ||
+	    			(event.getY() - mappedPoints[1]) / ratio < padding.top ||
+	    			(mappedPoints[2] - event.getX()) / ratio < padding.right ||
+	    			(mappedPoints[3] - event.getY()) / ratio < padding.bottom)
 		    		break;
 		    	
 		    	Point p = new Point(
-		    			(int)((event.getX() - mappedPoints[0]) / ratio - padding.x) 
-		    			* handler.signs.length / (display.getWidth() - 2 * padding.x),
-		    			(int)((event.getY() - mappedPoints[1]) / ratio - padding.y) 
-		    			* handler.signs[0].length / (display.getHeight() - 2 * padding.y));
+		    			(int)((event.getX() - mappedPoints[0]) / ratio - padding.left) 
+		    			* handler.signs.length / (getWidth() -  2 * padding.left),
+		    			(int)((event.getY() - mappedPoints[1]) / ratio - padding.bottom) 
+		    			* handler.signs[0].length / (getHeight() - 2 * padding.bottom + tsBarHeight));
 				
 				if(handler.signs[p.x][p.y] == Players.None.ordinal()) {
 					midPoint.set(p.x, p.y);
@@ -279,30 +295,32 @@ public class GameView extends View {
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	private float calculatePadding(Point padding) {
+	private float calculatePadding(Rect padding) {
+		padding.top = tsBarHeight;
 		float ratio; 
-        if(display.getWidth() * board.getHeight() / board.getWidth() > display.getHeight()) {
-            ratio = (float) display.getHeight() / board.getHeight();
-            padding.x = (display.getWidth() - (int)(board.getWidth() * ratio)) / 2;
+        if(getWidth() * board.getHeight() / board.getWidth() > getHeight()) {
+            ratio = (float) getHeight() / board.getHeight();
+            padding.left = (getWidth() - (int)(board.getWidth() * ratio)) / 2;
+            padding.right = (getWidth() - (int)(board.getWidth() * ratio)) / 2;
         }
         else {
-            ratio = (float) display.getWidth() / board.getWidth();
-            padding.y = (display.getHeight() - (int)(board.getHeight() * ratio)) / 2;
+            ratio = (float) getWidth() / board.getWidth();
+            padding.top += (getHeight() - (int)(board.getHeight() * ratio)) / 2;
+            padding.bottom = (getHeight() - (int)(board.getHeight() * ratio)) / 2;
         }
         
-        minCellSize = (display.getWidth() - padding.x * 2) / handler.signs.length;
+        minCellSize = (getWidth() - padding.left * 2) / handler.signs.length;
         
         return ratio;
 	}
 	
 	public void increaseBoard(int where) {
-		Point delta = new Point(), 
-				oldPadding = new Point(),
-				newPadding = new Point();
+		Point delta = new Point();
+		Rect oldPadding = new Rect(), newPadding = new Rect();
 		
 		float oldRatio = calculatePadding(oldPadding);
         float[] oldMapping = new float[2];
-        matrix.mapPoints(oldMapping, new float[]{ oldPadding.x, oldPadding.y });
+        matrix.mapPoints(oldMapping, new float[]{ oldPadding.right, oldPadding.top });
 		
 		switch(where) {
 			case GameHandler.INC_LEFT :
@@ -325,7 +343,7 @@ public class GameView extends View {
         matrix.postScale(scale, scale, 0, 0);
         
         float[] mappedPoints = new float[4];
-        matrix.mapPoints(mappedPoints, new float[] { newPadding.x, newPadding.y, minCellSize, minCellSize });
+        matrix.mapPoints(mappedPoints, new float[] { newPadding.right, newPadding.top, minCellSize, minCellSize });
         matrix.postTranslate(
     		delta.x * mappedPoints[2] - mappedPoints[0] + oldMapping[0],
     		delta.y * mappedPoints[3] - mappedPoints[1] + oldMapping[1]);
@@ -413,32 +431,32 @@ public class GameView extends View {
 	 */
 	
 	public void translate() {
-		Point padding = new Point();
+		Rect padding = new Rect();
 		calculatePadding(padding);
 		
 		float[] lastStep = new float[2];
 		matrix.mapPoints(lastStep, new float[] { 
-			handler.getLastStep().x * minCellSize + padding.x, 
-			handler.getLastStep().y * minCellSize + padding.y });
+			handler.getLastStep().x * minCellSize + padding.right, 
+			handler.getLastStep().y * minCellSize + padding.top });
 	  	
 	    float[] mappedPoints = new float[4];
 	    matrix.mapPoints(mappedPoints, new float[] {
-			0, 0, display.getWidth(), display.getHeight()});
+			0, 0, getWidth(), getHeight()});
 
 		PointF delta = new PointF();
-	    if(mappedPoints[0] + display.getWidth() / 2 - lastStep[0] > 0)
+	    if(mappedPoints[0] + getWidth() / 2 - lastStep[0] > 0)
 			delta.x = -mappedPoints[0];
-		else if(mappedPoints[2] + display.getWidth() / 2 - lastStep[0] < display.getWidth())
-			delta.x = display.getWidth() - mappedPoints[2];
+		else if(mappedPoints[2] + getWidth() / 2 - lastStep[0] < getWidth())
+			delta.x = getWidth() - mappedPoints[2];
 	    else
-	    	delta.x = display.getWidth() / 2 - lastStep[0];
+	    	delta.x = getWidth() / 2 - lastStep[0];
 	    
-		if(mappedPoints[1] + display.getHeight() / 2 - lastStep[1] > 0)
+		if(mappedPoints[1] + getHeight() / 2 - lastStep[1] > 0)
 			delta.y = -mappedPoints[1];
-		else if(mappedPoints[3] + display.getHeight() / 2 - lastStep[1] < display.getHeight())
-			delta.y = display.getHeight() - mappedPoints[3];
+		else if(mappedPoints[3] + getHeight() / 2 - lastStep[1] < getHeight())
+			delta.y = getHeight() - mappedPoints[3];
 		else
-			delta.y = display.getHeight() / 2 - lastStep[1];
+			delta.y = getHeight() / 2 - lastStep[1];
 		
 		frames = (int) Math.max(Math.abs(delta.x) / 5, Math.abs(delta.y) / 5) + 1;
 		translate.set(delta.x / frames, delta.y / frames);

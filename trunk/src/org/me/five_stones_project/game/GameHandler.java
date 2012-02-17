@@ -40,6 +40,7 @@ public class GameHandler {
 		}
 	}
 	
+	public Point grow;
 	public int[][] signs;
 	public Players me, enemy;
 	public GameStatistics stat = null;
@@ -67,10 +68,11 @@ public class GameHandler {
 	
 	public void reinitilize() {
 		stat = null;
-		gameEnds = false;
 		elapsedTime = 0;
 		mySteps.clear();
+		gameEnds = false;
 		enemySteps.clear();
+		grow = new Point();
 		startTime = System.currentTimeMillis();
 		lastStep = new Step(new Point(-1, -1), Players.None);
 	}
@@ -238,7 +240,7 @@ public class GameHandler {
 	public void enemyStep(Point point, boolean animation) {
 		synchronized (lock) {
 			if(lastStep.player != enemy) {
-				lastStep = new Step(point, enemy);						
+				lastStep = new Step(point, enemy);
 				signs[point.x][point.y] = enemy.ordinal();
 
 				//ienemy.updateState(this);
@@ -303,14 +305,24 @@ public class GameHandler {
 	 */
 	private void checkStatus(Point step) {
 		int inc = 0;
-		if(step.x - 1 <= 0 && signs.length < MAX_BOARD_X)
-			inc += INC_LEFT;
-		if(step.y - 1 <= 0 && signs[0].length < MAX_BOARD_Y)
-			inc += INC_TOP;
-		if(step.x + 2 >= signs.length && signs.length < MAX_BOARD_X)
+		if(step.x - 1 <= 0) {
+			if(signs.length >= MAX_BOARD_X)
+				grow.x = 1;
+			else if(grow.x == 0)
+				inc += INC_LEFT;
+		} 
+		if(step.y - 1 <= 0) {
+			if(signs[0].length >= MAX_BOARD_Y)
+				grow.y = 1;
+			else if(grow.y == 0)
+				inc += INC_TOP;
+		}
+		if(step.x + 2 >= signs.length && signs.length < MAX_BOARD_X) {
 			inc += INC_RIGHT;
-		if(step.y + 2 >= signs[0].length && signs[0].length < MAX_BOARD_Y)
+		}
+		if(step.y + 2 >= signs[0].length && signs[0].length < MAX_BOARD_Y) {
 			inc += INC_BOTTOM;
+		}
 
 		if(inc != 0) {
 			incrementBoard(inc);
