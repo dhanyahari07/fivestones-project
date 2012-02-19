@@ -3,10 +3,11 @@ package org.me.five_stones_project.game;
 import java.util.ArrayList;
 
 import org.me.five_stones_project.IEnemy;
-import org.me.five_stones_project.type.Players;
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.ai.PatternCounter;
 import org.me.five_stones_project.common.HighScoreHelper;
+import org.me.five_stones_project.type.Players;
+
 
 import android.graphics.Point;
 import android.os.Handler;

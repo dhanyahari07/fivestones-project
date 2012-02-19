@@ -1,4 +1,4 @@
-package org.me.five_stones_project.bluetooth;
+package com.tungi.android.malom.bluetooth;
 
 import android.graphics.Point;
 

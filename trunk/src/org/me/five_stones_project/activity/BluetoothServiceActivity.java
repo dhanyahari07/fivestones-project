@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.common.Properties;
+
+
+import org.me.five_stones_project.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,5 +1,6 @@
 package org.me.five_stones_project.ai;
 
+
 import org.me.five_stones_project.type.Players;
 
 import android.graphics.Point;
@@ -514,7 +515,7 @@ public class FiCalculator {
 	}
 	
 	public float[] modifyFi(float[] fi, float[] deltaFi) {		
-		float[] nfi = new float[fi.length];		
+		float[] nfi = new float[fi.length];
 		for(int i = 0; i < fi.length; ++i)
 			nfi[i] = (fi[i] + deltaFi[i]) == 0 ? 0 : 1;
 		

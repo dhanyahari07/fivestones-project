@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Languages;
 
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;

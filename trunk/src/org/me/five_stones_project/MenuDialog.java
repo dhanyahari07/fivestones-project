@@ -1,7 +1,10 @@
 package org.me.five_stones_project;
 
+
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.common.IconArrayAdapter;
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.content.Context;

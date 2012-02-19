@@ -1,11 +1,13 @@
 package org.me.five_stones_project.ai;
 
+
 import org.me.five_stones_project.IEnemy;
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.game.GameHandler;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Players;
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

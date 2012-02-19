@@ -7,6 +7,7 @@ import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Descriptions;
 import org.me.five_stones_project.type.Players;
 
+
 import android.graphics.Point;
 import android.util.Pair;
 
@@ -28,16 +29,15 @@ public class RLPlayer extends AndroidEnemy {
 	private float MAX = 1;
 	private int minimaxDepth;
 	
-	private State lastState;
-	private float[] updatedFi;
+	//private State lastState;
 	private Descriptions level;
 	private FiCalculator calculator;
-	private TDLearner androidLearner;
+	//private TDLearner androidLearner;
 
 	public RLPlayer() {
 		calculator = new FiCalculator();
-		androidLearner = new TDLearner(FI_LENGTH);
-		androidLearner.setTetas(DEFAULT_TETAS);
+		//androidLearner = new TDLearner(FI_LENGTH);
+		//androidLearner.setTetas(DEFAULT_TETAS);
 		
 		level = GameOptions.getInstance().getCurrentLevel();
 		
@@ -55,7 +55,7 @@ public class RLPlayer extends AndroidEnemy {
 	
 	@Override
 	public void showEndDialog(GameHandler handler) {
-		if(level == Descriptions.VeryHard) {
+		/*if(level == Descriptions.VeryHard) {
 			float reward = -0.04f;
 			if(handler.stat != null) {	
 				if(handler.stat.winner == android)
@@ -72,19 +72,19 @@ public class RLPlayer extends AndroidEnemy {
 				androidLearner.execute();
 				androidLearner.clearStates();
 			}
-		}
+		}*/
 		
 		super.showEndDialog(handler);
 	}
 	
 	@Override
-	public void updateState(GameHandler handler) {		
-		float reward = -0.04f;		
+	public void updateState(GameHandler handler) {
+		/*float reward = -0.04f;		
 		if(handler.getLastStepPlayer() == human) {
 			lastState = new State(updatedFi = calculator.calcFi(handler.signs, android, human), 
 					androidLearner.getTetas(), reward);
 			androidLearner.addState(lastState);
-		}
+		}*/
 	}
 	
 	@Override
@@ -92,9 +92,10 @@ public class RLPlayer extends AndroidEnemy {
 	
 	@Override
 	protected Point findBestStep(GameHandler handler) {
+		float[] updatedFi = calculator.calcFi(handler.signs, android, human);
 		int[][] copy = copyBoard(handler.signs);
 		if(isBoardEmpty(copy) == 0) {
-			androidLearner.addState(new EmptyState(FI_LENGTH));
+			//androidLearner.addState(new EmptyState(FI_LENGTH));
 			return new Point(copy.length / 2, copy[0].length / 2);
 		}
 	
@@ -167,7 +168,7 @@ public class RLPlayer extends AndroidEnemy {
 				minU = minSearch(board,	updateRelevantSpaces(board, 
 					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
 			else
-				minU = State.calculateUtility(nfi,	androidLearner.getTetas());
+				minU = State.calculateUtility(nfi,	/*androidLearner.getTetas()*/DEFAULT_TETAS);
 			
 			board[space.x][space.y] = Players.None.ordinal();
 			
@@ -203,7 +204,7 @@ public class RLPlayer extends AndroidEnemy {
 				maxU = maxSearch(board, updateRelevantSpaces(board, 
 					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
 			else
-				maxU = State.calculateUtility(nfi, androidLearner.getTetas());
+				maxU = State.calculateUtility(nfi, /*androidLearner.getTetas()*/DEFAULT_TETAS);
 			
 			board[space.x][space.y] = Players.None.ordinal();
 			

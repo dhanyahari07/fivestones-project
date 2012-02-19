@@ -3,7 +3,6 @@ package org.me.five_stones_project.activity;
 import java.util.ArrayList;
 
 import org.me.five_stones_project.LevelDialog;
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.bluetooth.BluetoothListener;
 import org.me.five_stones_project.common.BackgroundImage;
 import org.me.five_stones_project.common.HighScore;
@@ -12,6 +11,9 @@ import org.me.five_stones_project.game.GameHandler;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.game.SavedGameHandler;
 import org.me.five_stones_project.type.Descriptions;
+
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -1,13 +1,13 @@
-package org.me.five_stones_project.activity;
+package com.tungi.android.malom.activity;
 
-import org.me.five_stones_project.R;
-import org.me.five_stones_project.ai.AndroidEnemy;
-import org.me.five_stones_project.ai.RBPlayer;
-import org.me.five_stones_project.ai.RLPlayer;
-import org.me.five_stones_project.game.GameOptions;
-import org.me.five_stones_project.game.SavedGameHandler;
-import org.me.five_stones_project.type.Descriptions;
-import org.me.five_stones_project.type.Players;
+import com.tungi.android.malom.R;
+import com.tungi.android.malom.ai.AndroidEnemy;
+import com.tungi.android.malom.ai.RBPlayer;
+import com.tungi.android.malom.ai.RLPlayer;
+import com.tungi.android.malom.game.GameOptions;
+import com.tungi.android.malom.game.SavedGameHandler;
+import com.tungi.android.malom.type.Descriptions;
+import com.tungi.android.malom.type.Players;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

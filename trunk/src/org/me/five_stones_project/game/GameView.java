@@ -1,9 +1,11 @@
 package org.me.five_stones_project.game;
 
+
 import org.me.five_stones_project.AndroidMenu;
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.type.Descriptions;
 import org.me.five_stones_project.type.Players;
+
+import org.me.five_stones_project.R;
 
 import android.app.Activity;
 import android.content.Context;

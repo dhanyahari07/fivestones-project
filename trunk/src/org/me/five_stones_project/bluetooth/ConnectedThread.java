@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.GameActivity;
 import org.me.five_stones_project.common.Message;
+
+
+import org.me.five_stones_project.R;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Looper;
@@ -65,6 +67,7 @@ public class ConnectedThread extends Thread {
     public void write(Message msg) {
         try {
             mmOutStream.write(msg.getMessage());
+            mmOutStream.flush();
         } catch (IOException e) { }
     }
  

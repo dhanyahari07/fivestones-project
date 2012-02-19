@@ -1,11 +1,13 @@
 package org.me.five_stones_project.activity;
 
+
 import org.me.five_stones_project.AndroidMenu;
 import org.me.five_stones_project.IEnemy;
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.common.BackgroundImage;
 import org.me.five_stones_project.game.GameHandler;
 import org.me.five_stones_project.game.GameView;
+
+import org.me.five_stones_project.R;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
