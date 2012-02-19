@@ -1,7 +1,10 @@
 package org.me.five_stones_project;
 
+
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Descriptions;
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.content.Context;

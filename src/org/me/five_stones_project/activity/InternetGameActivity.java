@@ -1,12 +1,14 @@
 package org.me.five_stones_project.activity;
 
-import org.me.five_stones_project.R;
+
 import org.me.five_stones_project.common.MapFactory;
 import org.me.five_stones_project.internet.InternetEnemy;
 import org.me.five_stones_project.internet.PendingListener;
 import org.me.five_stones_project.internet.PendingThread;
 import org.me.five_stones_project.internet.WebService;
 import org.me.five_stones_project.type.Players;
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;

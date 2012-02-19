@@ -2,9 +2,11 @@ package org.me.five_stones_project.bluetooth;
 
 import java.io.IOException;
 
-import org.me.five_stones_project.R;
 import org.me.five_stones_project.activity.BluetoothGameActivity;
 import org.me.five_stones_project.common.Properties;
+
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;

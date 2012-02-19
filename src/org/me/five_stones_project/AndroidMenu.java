@@ -1,6 +1,9 @@
 package org.me.five_stones_project;
 
+
 import org.me.five_stones_project.activity.GameActivity;
+
+import org.me.five_stones_project.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

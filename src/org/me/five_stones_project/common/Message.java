@@ -8,7 +8,7 @@ import android.graphics.Point;
  */
 
 public class Message {
-	public static final int NECESSARY_BYTES = 2;
+	public static final int NECESSARY_BYTES = 3;
 	
 	private byte x;
 	private byte y;

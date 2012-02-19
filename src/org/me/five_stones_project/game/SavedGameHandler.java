@@ -6,6 +6,7 @@ import org.me.five_stones_project.ai.AndroidEnemy;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.type.Players;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;

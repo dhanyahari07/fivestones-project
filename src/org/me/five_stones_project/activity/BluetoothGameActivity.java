@@ -1,10 +1,12 @@
 package org.me.five_stones_project.activity;
 
-import org.me.five_stones_project.R;
+
 import org.me.five_stones_project.bluetooth.BluetoothEnemy;
 import org.me.five_stones_project.common.Properties;
 import org.me.five_stones_project.game.GameOptions;
 import org.me.five_stones_project.type.Players;
+
+import org.me.five_stones_project.R;
 
 import android.app.AlertDialog;
 import android.content.Context;
