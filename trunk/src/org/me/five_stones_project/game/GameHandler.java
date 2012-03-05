@@ -273,6 +273,12 @@ public class GameHandler {
 	}
 	
 	public void makeStepBack() {
+		if(gameEnds) {
+			gameEnds = false;
+			GameActivity.getInstance().finish();
+			return;
+		}
+		
 		if(mySteps.size() + enemySteps.size() <= 2 || !ienemy.cancel())
 			return;
 		

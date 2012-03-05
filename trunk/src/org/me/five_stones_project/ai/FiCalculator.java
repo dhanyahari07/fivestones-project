@@ -441,19 +441,19 @@ public class FiCalculator {
 			else
 				androidOpenedOne[countBefore]--;
 		}
+		else if(before == human.ordinal()) {
+			if(endBefore == Players.None.ordinal())
+				humanOpenedTwo[countBefore]--;
+			else
+				humanOpenedOne[countBefore]--;
+		}
 		if(after == android.ordinal()) {
 			if(endAfter == Players.None.ordinal())
 				androidOpenedTwo[countAfter]--;
 			else
 				androidOpenedOne[countAfter]--;
 		}
-		if(before == human.ordinal()) {
-			if(endBefore == Players.None.ordinal())
-				humanOpenedTwo[countBefore]--;
-			else
-				humanOpenedOne[countBefore]--;
-		}
-		if(after == human.ordinal()) {
+		else if(after == human.ordinal()) {
 			if(endAfter == Players.None.ordinal())
 				humanOpenedTwo[countAfter]--;
 			else

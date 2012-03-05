@@ -64,8 +64,10 @@ public class BluetoothGameActivity extends GameActivity {
 	
 	public void firstStep(Point point) {
 		if(handler.getLastStepPlayer() == Players.None) {
-			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-			v.vibrate(300);
+			if(GameOptions.getInstance().isVibration()) {
+				Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				v.vibrate(300);
+			}
 			
 			handler.enemyStep(point, GameOptions.getInstance().isAnimation());
 		}

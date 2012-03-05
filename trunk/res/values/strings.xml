@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_name">Five Stones</string>
+    <string name="app_name">Five in a row</string>
     
     <!-- main activity buttons -->
     <string name="cont">Continue</string>
@@ -16,6 +16,7 @@
     <string name="multiTwoPlayer">Same device</string>
 
     <!-- options menu -->
+    <string name="ai">AI timeout</string>
     <string name="levelDialog">Select Level</string>
     <string name="options">Options</string>
     <string name="sens">Touch\nsensitivity</string>
@@ -102,7 +103,7 @@
     
     <string name="about">About</string>
     <string name="aboutContent">
-	    Five Stones v2.2.3
+	    Five Stones v2.2.5
 	    \n\n
 	    Players put their signs in an empty square by turns.
 	    The goal is to collect five signs in an unbroken row

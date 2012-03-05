@@ -44,6 +44,6 @@ public enum Languages {
 		for(Languages language : values())
 			if(language.getLocale().equals(locale))
 				return language;
-		return null;
+		return English;
 	}
 }

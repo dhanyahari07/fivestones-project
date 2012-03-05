@@ -25,7 +25,7 @@ import android.widget.SeekBar;
 
 public class OptionsActivity extends BaseActivity {
 	private ListView list;
-	private SeekBar sensitivity;
+	private SeekBar sensitivity, ai;
 	private Languages selectedLanguage;
 	private Descriptions selectedStyle, selectedQuality; 
 
@@ -41,6 +41,9 @@ public class OptionsActivity extends BaseActivity {
 
 		sensitivity = (SeekBar) findViewById(R.options.seekbarsens);
 		sensitivity.setProgress(instance.getSensitivity());
+		
+		ai = (SeekBar) findViewById(R.options.seekbarai);
+		ai.setProgress(instance.getAi(true));
 		
 		/*
 		 * create other list
@@ -181,6 +184,7 @@ public class OptionsActivity extends BaseActivity {
 	private void saveChanges() {
 		GameOptions instance = GameOptions.getInstance();
 		
+		instance.setAi(ai.getProgress(), true);
 		instance.setSensitivity(sensitivity.getProgress());
 		instance.setCurrentStyle(selectedStyle);
 		instance.setCurrentQuality(selectedQuality);

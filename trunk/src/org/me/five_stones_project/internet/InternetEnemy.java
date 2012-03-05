@@ -128,8 +128,8 @@ public class InternetEnemy implements IEnemy, PendingListener {
 				@Override
 				public void run() {
 					new AlertDialog.Builder(activity)
-					.setMessage(R.string.noEnemy)
-					.setPositiveButton(R.string.finish, new OnClickListener() {
+					.setMessage(R.string.finish)
+					.setPositiveButton(R.string.again, new OnClickListener() {
 						
 						@Override
 						public void onClick(DialogInterface paramDialogInterface, int paramInt) {
@@ -154,19 +154,27 @@ public class InternetEnemy implements IEnemy, PendingListener {
 			}
 		}
 		else {
-			Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-			v.vibrate(300);
+			if(GameOptions.getInstance().isVibration()) {
+				Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+				v.vibrate(300);
+			}
 			
-			String[] res = result.split("_");
+			final String[] res = result.split("_");
 			
 			if(res.length == 3) {
 				int grow = Integer.parseInt(res[2]);
 				int t = grow / 10;
 				handler.grow.set(t, grow - t * 10);
 			}
-			handler.enemyStep(new Point(
-				Integer.parseInt(res[0]), 
-				Integer.parseInt(res[1])), GameOptions.getInstance().isAnimation());
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					handler.enemyStep(new Point(
+						Integer.parseInt(res[0]), 
+						Integer.parseInt(res[1])), GameOptions.getInstance().isAnimation());
+				}
+			});
 		}
 	}
 

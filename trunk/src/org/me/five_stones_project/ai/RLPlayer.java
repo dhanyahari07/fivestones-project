@@ -20,10 +20,10 @@ import android.util.Pair;
 public class RLPlayer extends AndroidEnemy {
 	public static final int FI_LENGTH = 16;
 	private static final float[] DEFAULT_TETAS = new float[] {		
-		-0.001f, -0.006f, -0.08f, -0.18f,
-		-0.003f, -0.01f, -0.1f, -0.3f,
-		0.001f, 0.006f, 0.08f, 0.18f,
-		0.003f, 0.01f, 0.1f, 0.3f
+		-0.001f, -0.006f, -0.08f, -0.14f,
+		-0.003f, -0.01f, -0.1f, -0.4f,
+		0.001f, 0.006f, 0.08f, 0.14f,
+		0.003f, 0.01f, 0.1f, 0.4f
 	};
 
 	private float MAX = 1;
@@ -42,14 +42,14 @@ public class RLPlayer extends AndroidEnemy {
 		level = GameOptions.getInstance().getCurrentLevel();
 		
 		if(level == Descriptions.Normal) {
-			minimaxDepth = 2;
+			minimaxDepth = 0;
 		}
 		else if(level == Descriptions.Hard) {
-			minimaxDepth = 4;
+			minimaxDepth = 2;
 			
 		}
 		else if(level == Descriptions.VeryHard) {
-			minimaxDepth = 6;
+			minimaxDepth = 4;
 		}
 	}
 	
@@ -88,9 +88,6 @@ public class RLPlayer extends AndroidEnemy {
 	}
 	
 	@Override
-	protected void finish() { }
-	
-	@Override
 	protected Point findBestStep(GameHandler handler) {
 		float[] updatedFi = calculator.calcFi(handler.signs, android, human);
 		int[][] copy = copyBoard(handler.signs);
@@ -127,19 +124,23 @@ public class RLPlayer extends AndroidEnemy {
 		float alfa = Float.NEGATIVE_INFINITY;
 		float beta = Float.POSITIVE_INFINITY;
 		float maxU = Float.NEGATIVE_INFINITY;
+		long start = System.currentTimeMillis();
 		
 		for(Point point : relevantSpaces) {	
 			copy[point.x][point.y] = android.ordinal();
 			
 			float[] nfi = calculator.modifyFi(updatedFi, 
 				calculator.calcDeltaFi(copy, point, android, android, human));
-			float minU = minSearch(copy, updateRelevantSpaces(
+			float minU = minSearch(copy, start, updateRelevantSpaces(
 					copy, relevantSpaces, point, 1), minimaxDepth, 0, alfa, beta, nfi);
 			
 			if(minU > maxU) {
 				maxU = minU;
 				best.set(point.x, point.y);
 			}
+			//add some random movement
+			else if(minU == maxU && Math.random() < 0.5)
+				best.set(point.x, point.y);
 			
 			copy[point.x][point.y] = Players.None.ordinal();
 		}
@@ -147,7 +148,7 @@ public class RLPlayer extends AndroidEnemy {
 		return best;
 	}
 
-	private float maxSearch(int[][] board, ArrayList<Point> relevantSpaces, 
+	private float maxSearch(int[][] board, long start, ArrayList<Point> relevantSpaces, 
 			int maxDepth, int currentDepth, float alfa, float beta, float[] fi) {		
 		for(Point p : relevantSpaces) {
 			board[p.x][p.y] = android.ordinal();
@@ -155,18 +156,18 @@ public class RLPlayer extends AndroidEnemy {
 			board[p.x][p.y] = Players.None.ordinal();
 			
 			if(five != null)
-				return MAX;
-		}
+				return MAX * maxDepth / currentDepth;
+		}			
 		
-		float maxU = Float.NEGATIVE_INFINITY;
+		float maxU = Float.NEGATIVE_INFINITY;		
 		for(Point space : relevantSpaces) {
 			board[space.x][space.y] = android.ordinal();
 								
 			float minU;
 			float[] nfi = calculator.modifyFi(fi, calculator.calcDeltaFi(board, space, android, android, human));
 			if(maxDepth > currentDepth)
-				minU = minSearch(board,	updateRelevantSpaces(board, 
-					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
+				minU = minSearch(board,	start, updateRelevantSpaces(board, 
+					relevantSpaces, space, 1), maxDepth, currentDepth + 1, alfa, beta, nfi);
 			else
 				minU = State.calculateUtility(nfi,	/*androidLearner.getTetas()*/DEFAULT_TETAS);
 			
@@ -183,7 +184,7 @@ public class RLPlayer extends AndroidEnemy {
 		return maxU;
 	}
 	
-	private float minSearch(int[][] board, ArrayList<Point> relevantSpaces, 
+	private float minSearch(int[][] board, long start, ArrayList<Point> relevantSpaces, 
 			int maxDepth, int currentDepth, float alfa, float beta, float[] fi) {		
 		for(Point p : relevantSpaces) {
 			board[p.x][p.y] = human.ordinal();
@@ -191,18 +192,22 @@ public class RLPlayer extends AndroidEnemy {
 			board[p.x][p.y] = Players.None.ordinal();
 			
 			if(five != null)
-				return -MAX;
+				return -MAX * maxDepth / currentDepth;
 		}
-		
+
+		boolean timeup = false;
 		float minU = Float.POSITIVE_INFINITY;
+		if(System.currentTimeMillis() - start > GameOptions.getInstance().getAi(false) * 1000)
+			timeup = true;
+			
 		for(Point space : relevantSpaces) {
 			board[space.x][space.y] = human.ordinal();
 
 			float maxU;
 			float[] nfi = calculator.modifyFi(fi, calculator.calcDeltaFi(board, space, human, android, human));
-			if(maxDepth > currentDepth)
-				maxU = maxSearch(board, updateRelevantSpaces(board, 
-					relevantSpaces, space, 1), maxDepth, ++currentDepth, alfa, beta, nfi);
+			if(maxDepth > currentDepth && !timeup)
+				maxU = maxSearch(board, start, updateRelevantSpaces(board, 
+					relevantSpaces, space, 1), maxDepth, currentDepth + 1, alfa, beta, nfi);
 			else
 				maxU = State.calculateUtility(nfi, /*androidLearner.getTetas()*/DEFAULT_TETAS);
 			

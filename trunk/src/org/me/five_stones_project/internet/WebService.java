@@ -21,6 +21,7 @@ import org.apache.http.params.HttpParams;
  */
 
 public class WebService {
+	//private static final String URL = "http://192.168.1.3:8888/fivestones";
 	private static final String URL = "http://tanglandras.appspot.com/fivestones";
 	
 	public static String executeRequest(String path, Map<String, String> params) throws Exception {

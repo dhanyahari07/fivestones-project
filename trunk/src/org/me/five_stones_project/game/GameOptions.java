@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
  * of the current game, game properties etc.
  */
 public class GameOptions {
+	private final String AI_KEY = "ai";
 	private final String QUALITY_KEY = "quality";
 	private final String STYLE_KEY = "game_style";
 	private final String VIBRATION_KEY = "vibration";
@@ -20,6 +21,7 @@ public class GameOptions {
 	private final String FULL_SCREEN_KEY = "fullscreen";
 	private final String SENSITIVITY_KEY = "sensitivity";
 	
+	private final int AI_MIN= 3;
 	private final int DEFAULT_SENSITIVITY = 2;
 	private final int DEFAULT_QUALITY = Descriptions.High.ordinal();
 	private final int DEFAULT_LEVEL = Descriptions.Normal.ordinal();
@@ -36,7 +38,7 @@ public class GameOptions {
 			instance = new GameOptions(ctx);
 	}
 	
-	private int sensitivity;
+	private int sensitivity, ai;
 	private Descriptions currentStyle;
 	private Descriptions currentLevel;
 	private Descriptions currentQuality;
@@ -50,6 +52,7 @@ public class GameOptions {
 		SharedPreferences sp = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE);
 
+		ai = sp.getInt(AI_KEY, AI_MIN + 2);
 		animation = sp.getBoolean(ANIMATION_KEY, true);
 		vibration = sp.getBoolean(VIBRATION_KEY, false);
 		fullScreen = sp.getBoolean(FULL_SCREEN_KEY, true);
@@ -63,6 +66,7 @@ public class GameOptions {
 		SharedPreferences.Editor editor = ctx.getSharedPreferences(
 				Activity.ACTIVITY_SERVICE, Activity.MODE_PRIVATE).edit();
 		
+		editor.putInt(AI_KEY, ai);
 		editor.putBoolean(ANIMATION_KEY, animation);
 		editor.putBoolean(VIBRATION_KEY, vibration);		
 		editor.putInt(SENSITIVITY_KEY, sensitivity);
@@ -75,8 +79,23 @@ public class GameOptions {
 	}
 
 	//getters and setters
+	
 	public Descriptions getCurrentLevel() {
 		return currentLevel;
+	}
+
+	public int getAi(boolean withoutMin) {
+		if(withoutMin)
+			return ai - AI_MIN;
+		else
+			return ai;
+	}
+
+	public void setAi(int ai, boolean add) {
+		if(add)
+			this.ai = ai + AI_MIN;
+		else
+			this.ai = ai;
 	}
 
 	public void setCurrentLevel(Descriptions selectedLevel) {

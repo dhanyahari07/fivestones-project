@@ -72,14 +72,15 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 	protected void onDestroy() {
 		super.onDestroy();
 
+		if(pending != null)
+			pending.terminate();
 		if(enemy != null)
 			((InternetEnemy)enemy).close();
 		try {
-			WebService.executeRequest("/gamec/disconnect", 
-				MapFactory.createMap(new String[] { "id", "app" }, new String[] { id, "0" }));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			if(id != null)
+				WebService.executeRequest("/gamec/disconnect", 
+					MapFactory.createMap(new String[] { "id", "app" }, new String[] { id, "0" }));
+		} catch (Exception e) {	}
 	}
 	
 	@Override
@@ -111,12 +112,15 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 			if(start) {
 				enemy = new InternetEnemy(this);
 				boolean begin = ((InternetEnemy)enemy).start(handler);
-				handler.initialize(enemy, view, Players.X, Players.O, false);
 
-				if(begin)
+				if(begin) {
+					handler.initialize(enemy, view, Players.X, Players.O, false);
 					handler.setLastStep(new Point(-1, -1), Players.O);
-				else
-					handler.setLastStep(new Point(-1, -1), Players.X);
+				}
+				else {
+					handler.initialize(enemy, view, Players.O, Players.X, false);
+					handler.setLastStep(new Point(-1, -1), Players.O);
+				}
 			}
 			else {				
 				createDialog(R.string.enemys);
@@ -142,12 +146,15 @@ public class InternetGameActivity extends GameActivity implements PendingListene
 		
 		enemy = new InternetEnemy(this);
 		boolean begin = ((InternetEnemy)enemy).start(handler);
-		handler.initialize(enemy, view, Players.O, Players.X, false);
 		
-		if(begin)
-			handler.setLastStep(new Point(-1, -1), Players.X);
-		else
+		if(begin) {
+			handler.initialize(enemy, view, Players.X, Players.O, false);
 			handler.setLastStep(new Point(-1, -1), Players.O);
+		}
+		else {
+			handler.initialize(enemy, view, Players.O, Players.X, false);
+			handler.setLastStep(new Point(-1, -1), Players.O);
+		}
 	}
 	
 	@Override
