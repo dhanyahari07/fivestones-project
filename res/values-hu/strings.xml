@@ -16,6 +16,7 @@
     <string name="multiTwoPlayer">Egy készülék</string>
 
     <!-- options menu -->
+    <string name="ai">AI időkorlát</string>
     <string name="options">Beállítások</string>
     <string name="sens">Tapintás\nérzékenysége</string>
     <string name="style">Stílus</string>
@@ -102,7 +103,7 @@
     
     <string name="about">Névjegy</string>
     <string name="aboutContent">
-	    Amőba v2.2.3
+	    Amőba v2.2.5
 	    \n\n
 	    A játékosok felváltva rajzolnak egy kört vagy
 	    egy x-et az üres négyzetek valamelyikébe. Az a 

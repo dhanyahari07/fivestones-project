@@ -156,7 +156,7 @@ public class GameView extends View {
 		paint.setShader(shader);        
 		canvas.drawRect(rect, paint);
 		
-		if (handler.IsGameEnds() && !isAnimation) {
+		if (handler.IsGameEnds() && !isAnimation && handler.stat.winner != Players.Draw) {
 			Paint line = new Paint();
 			if (handler.stat.winner ==  Players.X)
 				line.setColor(Color.RED);
@@ -178,9 +178,9 @@ public class GameView extends View {
 	}
 	
 	private int mode = 0;
-	private PointF midPoint, start;
-	private Matrix matrix, savedMatrix;
 	private double originalDistance = 0;
+	private PointF midPoint = new PointF(), start = new PointF();
+	private Matrix matrix = new Matrix(), savedMatrix = new Matrix();
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -251,7 +251,7 @@ public class GameView extends View {
 				break;
 			
 			if(event.getEventTime() - event.getDownTime() 
-					< GameOptions.getInstance().getSensitivity() * 100) {
+					< GameOptions.getInstance().getSensitivity() * 100 && handler.stat == null) {
 				
 				Rect padding = new Rect();
 				calculatePadding(padding);

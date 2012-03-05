@@ -68,21 +68,19 @@ public abstract class AndroidEnemy implements IEnemy {
 	    		
 				@Override
 				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-					instance.reinitilize();								
+					paramDialogInterface.dismiss();
+					instance.reinitilize();
 				}
 			})
 			.setNegativeButton(R.string.no, new OnClickListener() {
 				
 				@Override
-				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-					finish();
-					instance.finish();
+				public void onClick(DialogInterface paramDialogInterface, int paramInt) {					
+					paramDialogInterface.dismiss();
 				}
 			})
 			.setTitle(R.string.newGame).show();
 	}
-	
-	protected abstract void finish();
 		
 	protected abstract Point findBestStep(GameHandler handler);
 	

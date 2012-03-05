@@ -106,8 +106,10 @@ public class BluetoothEnemy implements IEnemy {
 		@Override
 		public void run() {
 			if(handler != null) {
-				Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-				v.vibrate(300);
+				if(GameOptions.getInstance().isVibration()) {
+					Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+					v.vibrate(300);
+				}
 				
 				handler.grow.set(grow.x, grow.y);
 				handler.enemyStep(point, GameOptions.getInstance().isAnimation());

@@ -64,7 +64,4 @@ public class RBPlayer extends AndroidEnemy {
 		//default return value
 		return null;
 	}
-	
-	@Override
-	protected void finish() { }
 }
