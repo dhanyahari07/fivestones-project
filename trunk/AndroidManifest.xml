@@ -3,7 +3,7 @@
      	  package="org.me.five_stones_project"
      	  android:installLocation="auto" 
      	  android:versionName="2.2.5" 
-     	  android:versionCode="47">
+     	  android:versionCode="48">
     
     <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
     

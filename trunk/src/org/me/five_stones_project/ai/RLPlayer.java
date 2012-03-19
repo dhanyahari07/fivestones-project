@@ -139,7 +139,7 @@ public class RLPlayer extends AndroidEnemy {
 				best.set(point.x, point.y);
 			}
 			//add some random movement
-			else if(minU == maxU && Math.random() < 0.5)
+			else if(round(minU, 3) == round(maxU, 3) && Math.random() < 0.5)
 				best.set(point.x, point.y);
 			
 			copy[point.x][point.y] = Players.None.ordinal();
@@ -246,5 +246,10 @@ public class RLPlayer extends AndroidEnemy {
 					newSpaces.add(newPoint);
 			}
 		return newSpaces;
+	}
+	
+	private float round(float n, int digit) {
+		int t = (int)(n * Math.pow(10, digit));
+		return t / (float)Math.pow(10, digit);
 	}
 }
