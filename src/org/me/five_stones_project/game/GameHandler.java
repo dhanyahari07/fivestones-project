@@ -218,6 +218,9 @@ public class GameHandler {
 	}
 	
 	public void makeMyStep(Point myStep) {
+		if(gameEnds)
+			return;
+		
 		lastStep = new Step(myStep, me);
 		signs[myStep.x][myStep.y] = me.ordinal();
 
@@ -274,7 +277,6 @@ public class GameHandler {
 	
 	public void makeStepBack() {
 		if(gameEnds) {
-			gameEnds = false;
 			GameActivity.getInstance().finish();
 			return;
 		}

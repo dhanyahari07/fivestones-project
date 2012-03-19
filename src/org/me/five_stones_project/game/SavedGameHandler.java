@@ -29,7 +29,7 @@ public class SavedGameHandler {
 	private static final String LAST_STEP_PLAYER = "last_step_palyer";
 
 	public static void save(Context ctx, GameHandler handler) {
-		if(isBoardEmpty(handler.signs))
+		if(handler.signs == null || isBoardEmpty(handler.signs))
 			return;
 		
 		SharedPreferences.Editor editor = ctx.getSharedPreferences(

@@ -184,8 +184,10 @@ public class GameView extends View {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if(isAnimation)
+		if(isAnimation) {
 			finishAnimation();
+			return false;
+		}
 		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN : {
